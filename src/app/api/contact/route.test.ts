@@ -13,6 +13,8 @@ const validPayload = {
   address: "Marshville, NC",
   message: LONG_ENOUGH_MESSAGE,
   company: "",
+  // Well in the past, so the anti-bot timing check passes.
+  renderedAt: String(Date.now() - 10_000),
 };
 
 function makeRequest(body: unknown) {
@@ -33,6 +35,32 @@ describe("validateContactPayload", () => {
 
   it("requires an email", () => {
     expect(validateContactPayload({ ...validPayload, email: "" })).toBe("Email is required.");
+  });
+
+  it("rejects a malformed email", () => {
+    expect(validateContactPayload({ ...validPayload, email: "not-an-email" })).toBe(
+      "Please enter a valid email address."
+    );
+  });
+
+  it("truncates rather than rejects a name over the max length", () => {
+    expect(validateContactPayload({ ...validPayload, name: "a".repeat(101) })).toBeNull();
+  });
+
+  it("rejects a serviceType outside the known list", () => {
+    expect(validateContactPayload({ ...validPayload, serviceType: "Free Cleaning Forever" })).toBe(
+      "Invalid service type."
+    );
+  });
+
+  it("rejects a frequency outside the known list", () => {
+    expect(validateContactPayload({ ...validPayload, frequency: "Every Hour" })).toBe(
+      "Invalid frequency."
+    );
+  });
+
+  it("accepts an empty serviceType/frequency (dropdown left unselected)", () => {
+    expect(validateContactPayload({ ...validPayload, serviceType: "", frequency: "" })).toBeNull();
   });
 
   it("rejects a message under the minimum length", () => {
@@ -88,6 +116,32 @@ describe("POST /api/contact", () => {
     const res = await POST(makeRequest({ ...validPayload, company: "I am a bot" }));
     expect(res.status).toBe(200);
     expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("silently succeeds without sending mail when submitted too fast", async () => {
+    const res = await POST(makeRequest({ ...validPayload, renderedAt: String(Date.now()) }));
+    expect(res.status).toBe(200);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("silently succeeds without sending mail when renderedAt is missing", async () => {
+    const { name, phone, email, serviceType, frequency, address, message, company } = validPayload;
+    const res = await POST(
+      makeRequest({ name, phone, email, serviceType, frequency, address, message, company })
+    );
+    expect(res.status).toBe(200);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("strips control characters and truncates the name before sending", async () => {
+    const res = await POST(
+      makeRequest({ ...validPayload, name: `Jane\r\nBcc: evil@example.com ${"x".repeat(120)}` })
+    );
+    expect(res.status).toBe(200);
+    const [, options] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+    const sentBody = JSON.parse(options.body as string);
+    expect(sentBody.subject).not.toMatch(/[\r\n]/);
+    expect(sentBody.subject.length).toBeLessThan(140);
   });
 
   it("returns 500 when email delivery isn't configured", async () => {

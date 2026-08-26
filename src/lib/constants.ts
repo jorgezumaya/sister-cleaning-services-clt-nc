@@ -45,6 +45,14 @@ export const SERVICE_AREAS = [
 
 export const MESSAGE_MIN_LENGTH = 30;
 export const MESSAGE_MAX_LENGTH = 500;
+export const NAME_MAX_LENGTH = 100;
+export const PHONE_MAX_LENGTH = 30;
+export const ADDRESS_MAX_LENGTH = 200;
+
+// Anti-spam: reject a submission that arrives faster than a human could
+// plausibly have filled out every field. The form records its own render
+// time in a hidden field — see ContactForm.tsx and api/contact/route.ts.
+export const MIN_SUBMIT_SECONDS = 3;
 
 export const NAV_LINKS = [
   { href: "/", key: "home", label: "Home" },

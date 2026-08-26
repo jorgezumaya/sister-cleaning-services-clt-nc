@@ -7,6 +7,9 @@ import {
   FREQUENCIES,
   MESSAGE_MIN_LENGTH,
   MESSAGE_MAX_LENGTH,
+  NAME_MAX_LENGTH,
+  PHONE_MAX_LENGTH,
+  ADDRESS_MAX_LENGTH,
   BUSINESS_PHONE_DISPLAY,
   BUSINESS_PHONE_TEL,
 } from "@/lib/constants";
@@ -23,6 +26,9 @@ export default function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [message, setMessage] = useState("");
+  // Anti-spam: records when the form first rendered, so the server can
+  // reject submissions that arrive too fast to be a real person typing.
+  const [renderedAt] = useState(() => Date.now());
 
   const messageLength = message.trim().length;
   const messageTooShort = messageLength > 0 && messageLength < MESSAGE_MIN_LENGTH;
@@ -113,15 +119,34 @@ export default function ContactForm() {
         Company
         <input type="text" name="company" tabIndex={-1} autoComplete="off" />
       </label>
+      <input type="hidden" name="renderedAt" value={renderedAt} />
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label={t("contactForm.name")} name="name" required autoComplete="name" />
-        <Field label={t("contactForm.phone")} name="phone" type="tel" required autoComplete="tel" />
+        <Field
+          label={t("contactForm.name")}
+          name="name"
+          required
+          autoComplete="name"
+          maxLength={NAME_MAX_LENGTH}
+        />
+        <Field
+          label={t("contactForm.phone")}
+          name="phone"
+          type="tel"
+          required
+          autoComplete="tel"
+          maxLength={PHONE_MAX_LENGTH}
+        />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
         <Field label={t("contactForm.email")} name="email" type="email" required autoComplete="email" />
-        <Field label={t("contactForm.address")} name="address" autoComplete="address-level2" />
+        <Field
+          label={t("contactForm.address")}
+          name="address"
+          autoComplete="address-level2"
+          maxLength={ADDRESS_MAX_LENGTH}
+        />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -189,12 +214,14 @@ function Field({
   type = "text",
   required,
   autoComplete,
+  maxLength,
 }: {
   label: string;
   name: string;
   type?: string;
   required?: boolean;
   autoComplete?: string;
+  maxLength?: number;
 }) {
   return (
     <div>
@@ -207,6 +234,7 @@ function Field({
         type={type}
         required={required}
         autoComplete={autoComplete}
+        maxLength={maxLength}
         className="w-full rounded-xl border border-brand-100 px-4 py-2.5 text-sm outline-none transition-colors duration-150 hover:border-brand-300 focus:border-brand-500"
       />
     </div>

@@ -1,7 +1,24 @@
 import { NextResponse } from "next/server";
-import { MESSAGE_MIN_LENGTH, MESSAGE_MAX_LENGTH } from "@/lib/constants";
+import {
+  MESSAGE_MIN_LENGTH,
+  MESSAGE_MAX_LENGTH,
+  NAME_MAX_LENGTH,
+  PHONE_MAX_LENGTH,
+  ADDRESS_MAX_LENGTH,
+  MIN_SUBMIT_SECONDS,
+  SERVICE_TYPES,
+  FREQUENCIES,
+} from "@/lib/constants";
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
+
+// Deliberately permissive (catches "no @", "no domain") rather than a strict
+// RFC 5322 pattern — the goal is rejecting obvious garbage, not gatekeeping
+// valid-but-unusual addresses. Resend itself rejects anything it can't send to.
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+const VALID_SERVICE_TYPES = new Set<string>(SERVICE_TYPES.map(s => s.name));
+const VALID_FREQUENCIES = new Set<string>(FREQUENCIES.map(f => f.label));
 
 export type ContactPayload = {
   name: string;
@@ -13,6 +30,9 @@ export type ContactPayload = {
   message: string;
   // Honeypot: real visitors never fill this in — bots that fill every field do.
   company: string;
+  // Set client-side to the form's render time (ms epoch); a submission that
+  // arrives too soon after that to be human is treated like the honeypot.
+  renderedAt: string;
 };
 
 function escapeHtml(value: string): string {
@@ -23,11 +43,28 @@ function escapeHtml(value: string): string {
     .replace(/"/g, "&quot;");
 }
 
+/** Strips control/newline characters from a single-line field and caps its length. */
+function sanitizeLine(value: string, maxLength: number): string {
+  return value
+    .replace(/[\r\n\t\x00-\x1f\x7f]/g, " ")
+    .trim()
+    .slice(0, maxLength);
+}
+
 /** Server-side mirror of the client-side rules in ContactForm — never trust the client alone. */
 export function validateContactPayload(body: Partial<ContactPayload>): string | null {
-  if (!body.name?.trim()) return "Name is required.";
-  if (!body.phone?.trim()) return "Phone is required.";
-  if (!body.email?.trim()) return "Email is required.";
+  const name = sanitizeLine(body.name ?? "", NAME_MAX_LENGTH);
+  const phone = sanitizeLine(body.phone ?? "", PHONE_MAX_LENGTH);
+  const email = sanitizeLine(body.email ?? "", 254);
+  const serviceType = sanitizeLine(body.serviceType ?? "", 100);
+  const frequency = sanitizeLine(body.frequency ?? "", 100);
+
+  if (!name) return "Name is required.";
+  if (!phone) return "Phone is required.";
+  if (!email) return "Email is required.";
+  if (!EMAIL_RE.test(email)) return "Please enter a valid email address.";
+  if (serviceType && !VALID_SERVICE_TYPES.has(serviceType)) return "Invalid service type.";
+  if (frequency && !VALID_FREQUENCIES.has(frequency)) return "Invalid frequency.";
 
   const messageLength = body.message?.trim().length ?? 0;
   if (messageLength < MESSAGE_MIN_LENGTH) {
@@ -48,10 +85,18 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request body." }, { status: 400 });
   }
 
-  const { name, phone, email, serviceType, frequency, address, message, company } = body;
+  const { company, renderedAt } = body;
 
   // Bots fill hidden fields; real users leave this blank. Pretend success either way.
   if (company) {
+    return NextResponse.json({ ok: true });
+  }
+
+  // Bots typically submit within milliseconds of loading the page; a real
+  // visitor needs at least a few seconds to fill out every field. Missing or
+  // malformed timing data is treated the same as failing the check.
+  const elapsedMs = Date.now() - Number(renderedAt);
+  if (!Number.isFinite(elapsedMs) || elapsedMs < MIN_SUBMIT_SECONDS * 1000) {
     return NextResponse.json({ ok: true });
   }
 
@@ -59,6 +104,14 @@ export async function POST(request: Request) {
   if (validationError) {
     return NextResponse.json({ error: validationError }, { status: 400 });
   }
+
+  const name = sanitizeLine(body.name!, NAME_MAX_LENGTH);
+  const phone = sanitizeLine(body.phone!, PHONE_MAX_LENGTH);
+  const email = sanitizeLine(body.email!, 254);
+  const serviceType = sanitizeLine(body.serviceType ?? "", 100);
+  const frequency = sanitizeLine(body.frequency ?? "", 100);
+  const address = sanitizeLine(body.address ?? "", ADDRESS_MAX_LENGTH);
+  const message = body.message!.trim().slice(0, MESSAGE_MAX_LENGTH);
 
   const apiKey = process.env.RESEND_API_KEY;
   const toEmail = process.env.CONTACT_TO_EMAIL;
@@ -74,13 +127,13 @@ export async function POST(request: Request) {
 
   const html = `
     <h2>New quote request — Sisters Cleaning Service</h2>
-    <p><strong>Name:</strong> ${escapeHtml(name!)}</p>
-    <p><strong>Phone:</strong> ${escapeHtml(phone!)}</p>
-    <p><strong>Email:</strong> ${escapeHtml(email!)}</p>
-    <p><strong>Service:</strong> ${escapeHtml(serviceType ?? "—")}</p>
-    <p><strong>Frequency:</strong> ${escapeHtml(frequency ?? "—")}</p>
-    <p><strong>Address / area:</strong> ${escapeHtml(address ?? "—")}</p>
-    <p><strong>Message:</strong><br />${escapeHtml(message!).replace(/\n/g, "<br />")}</p>
+    <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+    <p><strong>Phone:</strong> ${escapeHtml(phone)}</p>
+    <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+    <p><strong>Service:</strong> ${escapeHtml(serviceType || "—")}</p>
+    <p><strong>Frequency:</strong> ${escapeHtml(frequency || "—")}</p>
+    <p><strong>Address / area:</strong> ${escapeHtml(address || "—")}</p>
+    <p><strong>Message:</strong><br />${escapeHtml(message).replace(/\n/g, "<br />")}</p>
   `;
 
   const res = await fetch(RESEND_ENDPOINT, {
