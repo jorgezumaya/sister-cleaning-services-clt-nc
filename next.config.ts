@@ -1,4 +1,10 @@
 import type { NextConfig } from "next";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+
+// Lets `next dev` resolve Cloudflare bindings (none currently defined, but
+// this is required by @opennextjs/cloudflare regardless) instead of only
+// working under `opennextjs-cloudflare preview`.
+initOpenNextCloudflareForDev();
 
 // Set by the GitHub Pages workflow only — the default `next build` (used for
 // the real Cloudflare deploy) stays a normal server build with working API

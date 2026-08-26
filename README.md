@@ -3,7 +3,7 @@
 This repo is for the website owned by Sisters Cleaning Service, located in the greater
 Charlotte, NC (CLT) area — Marshville, Monroe, Waxhaw, Indian Trail, and nearby towns.
 
-Next.js (App Router) + Tailwind CSS, deployed to Cloudflare Pages.
+Next.js (App Router) + Tailwind CSS, deployed to Cloudflare Workers.
 
 ## Getting started
 
@@ -83,8 +83,20 @@ the brand colors); replace it the same way if a proper logo mark is designed.
 
 ## Deploying (Cloudflare)
 
-Build/deploy with [`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare) and set
-the env vars above as Cloudflare secrets/variables in the project settings.
+Deployed as a Cloudflare Worker via [`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare)
+(config in `wrangler.jsonc` / `open-next.config.ts`):
+
+```bash
+npx wrangler login   # one-time, per machine
+npm run deploy        # opennextjs-cloudflare build && opennextjs-cloudflare deploy
+```
+
+Set the env vars above as secrets/variables on the Worker (dashboard → Worker →
+Settings → Variables, or `npx wrangler secret put <NAME>`), and attach the custom
+domain under Worker → Settings → Domains & Routes.
+
+`npm run preview` builds and runs the Worker locally against Cloudflare's runtime
+(requires Node ≥22 for `wrangler`/`miniflare`).
 
 ## CI/CD
 
