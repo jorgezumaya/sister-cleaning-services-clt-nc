@@ -82,8 +82,7 @@ ever reads the collection back) and deploy the same way:
 firebase deploy --only firestore --project sisters-cleaning-company
 ```
 
-Requires a Firestore database to exist on the project (Firebase console → Firestore
-Database → Create database) — it isn't provisioned automatically the way Storage is.
+(The first deploy also provisions the Firestore database itself if it doesn't exist yet.)
 
 ## Brand assets
 
