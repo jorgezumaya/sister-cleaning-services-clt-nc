@@ -31,21 +31,24 @@ function interpolate(template: string, params?: Params): string {
 // useState+useEffect: the server snapshot is always "en", and React only
 // switches to the real (possibly localStorage-backed) client snapshot after
 // hydration completes, so there's no hydration-mismatch flash to manage by hand.
-let currentLang: Lang | null = null;
+// localStorage itself is the source of truth — getSnapshot re-reads it every
+// call (cheap) rather than caching in a module-level variable, so it can
+// never go stale relative to what setLang() last wrote. `memoryFallback`
+// only matters if localStorage is unavailable entirely (e.g. private mode).
+let memoryFallback: Lang = "en";
 const listeners = new Set<() => void>();
 
 function readStoredLang(): Lang {
   try {
     const stored = window.localStorage.getItem(STORAGE_KEY);
-    return stored === "es" ? "es" : "en";
+    return stored === "es" ? "es" : stored === "en" ? "en" : memoryFallback;
   } catch {
-    return "en";
+    return memoryFallback;
   }
 }
 
 function getSnapshot(): Lang {
-  if (currentLang === null) currentLang = readStoredLang();
-  return currentLang;
+  return readStoredLang();
 }
 
 function getServerSnapshot(): Lang {
@@ -58,11 +61,11 @@ function subscribe(listener: () => void) {
 }
 
 function commitLang(next: Lang) {
-  currentLang = next;
+  memoryFallback = next;
   try {
     window.localStorage.setItem(STORAGE_KEY, next);
   } catch {
-    // Non-fatal — the toggle still works for the current page view.
+    // Non-fatal — the toggle still works for the current page view via memoryFallback.
   }
   listeners.forEach(listener => listener());
 }
