@@ -1,11 +1,13 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import FacebookIcon from "@/components/FacebookIcon";
 import {
   BUSINESS_NAME,
   BUSINESS_TAGLINE,
   BUSINESS_PHONE_DISPLAY,
   BUSINESS_PHONE_TEL,
   BUSINESS_EMAIL_DISPLAY,
+  BUSINESS_FACEBOOK,
   NAV_LINKS,
   SERVICE_AREAS,
 } from "@/lib/constants";
@@ -23,6 +25,15 @@ export default function Footer() {
           <p className="text-sm text-white/70">
             <FooterLink href={`mailto:${BUSINESS_EMAIL_DISPLAY}`}>{BUSINESS_EMAIL_DISPLAY}</FooterLink>
           </p>
+          <a
+            href={BUSINESS_FACEBOOK}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Sisters Cleaning Service on Facebook"
+            className="mt-4 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-500 hover:bg-accent-500/10 hover:text-white"
+          >
+            <FacebookIcon className="h-4 w-4" />
+          </a>
         </div>
 
         <div>

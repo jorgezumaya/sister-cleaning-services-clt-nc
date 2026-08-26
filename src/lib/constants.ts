@@ -12,6 +12,7 @@ export const BUSINESS_PHONE_DISPLAY = "(704) 261-5942";
 export const BUSINESS_PHONE_TEL = "tel:+17042615942";
 export const BUSINESS_PHONE_SMS = "sms:+17042615942";
 export const BUSINESS_WHATSAPP = "https://wa.me/17042615942";
+export const BUSINESS_FACEBOOK = "https://www.facebook.com/share/1FAUqvC3sZ/?mibextid=wwXIfr";
 
 export const SERVICE_TYPES = [
   { name: "Residential Cleaning", description: "Homes, apartments, and condos — kept spotless on your schedule." },

@@ -3,7 +3,14 @@
 import Link from "next/link";
 import { useState, type SVGProps } from "react";
 import { usePathname } from "next/navigation";
-import { BUSINESS_NAME, BUSINESS_PHONE_DISPLAY, BUSINESS_PHONE_TEL, NAV_LINKS } from "@/lib/constants";
+import FacebookIcon from "@/components/FacebookIcon";
+import {
+  BUSINESS_NAME,
+  BUSINESS_PHONE_DISPLAY,
+  BUSINESS_PHONE_TEL,
+  BUSINESS_FACEBOOK,
+  NAV_LINKS,
+} from "@/lib/constants";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
@@ -43,7 +50,16 @@ export default function Header() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-4 md:flex">
+          <a
+            href={BUSINESS_FACEBOOK}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Sisters Cleaning Service on Facebook"
+            className="text-brand-800 transition-colors duration-200 hover:text-accent-600"
+          >
+            <FacebookIcon className="h-5 w-5" />
+          </a>
           <a
             href={BUSINESS_PHONE_TEL}
             className="text-sm font-semibold text-brand-800 transition-colors duration-200 hover:text-accent-600"
@@ -93,6 +109,15 @@ export default function Header() {
               className="rounded-lg border border-brand-100 px-3 py-2.5 text-center text-sm font-semibold text-brand-800 transition-colors duration-150 hover:border-brand-500 hover:bg-brand-50"
             >
               Call {BUSINESS_PHONE_DISPLAY}
+            </a>
+            <a
+              href={BUSINESS_FACEBOOK}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 rounded-lg border border-brand-100 px-3 py-2.5 text-center text-sm font-semibold text-brand-800 transition-colors duration-150 hover:border-brand-500 hover:bg-brand-50"
+            >
+              <FacebookIcon className="h-4 w-4" />
+              Facebook
             </a>
             <Link
               href="/contact"
