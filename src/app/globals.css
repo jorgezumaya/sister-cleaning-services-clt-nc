@@ -1,0 +1,43 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #16232a;
+
+  /* Deep navy-teal brand scale — professional janitorial/cleaning look. */
+  --brand-950: #071a22;
+  --brand-900: #0b2e3a;
+  --brand-800: #0e4152;
+  --brand-700: #125467;
+  --brand-600: #166c84;
+  --brand-500: #1c88a3;
+  --brand-100: #e5f3f6;
+  --brand-50: #f2f9fa;
+
+  /* Fresh accent for CTAs / highlights — reads as "clean". */
+  --accent-500: #2f9e7a;
+  --accent-600: #268066;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand-950: var(--brand-950);
+  --color-brand-900: var(--brand-900);
+  --color-brand-800: var(--brand-800);
+  --color-brand-700: var(--brand-700);
+  --color-brand-600: var(--brand-600);
+  --color-brand-500: var(--brand-500);
+  --color-brand-100: var(--brand-100);
+  --color-brand-50: var(--brand-50);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
