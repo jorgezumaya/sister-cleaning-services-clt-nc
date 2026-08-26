@@ -12,8 +12,8 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-brand-100 bg-white/95 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <Link href="/" className="flex items-center gap-2.5" onClick={() => setOpen(false)}>
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-800 text-white">
+        <Link href="/" className="group flex items-center gap-2.5" onClick={() => setOpen(false)}>
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-800 text-white transition-transform duration-300 group-hover:rotate-12 group-hover:bg-accent-500">
             <SparkleIcon className="h-5 w-5" />
           </span>
           <span className="text-base font-bold leading-tight text-brand-900 sm:text-lg">
@@ -22,26 +22,37 @@ export default function Header() {
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
-          {NAV_LINKS.map(link => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`text-sm font-medium transition hover:text-brand-700 ${
-                pathname === link.href ? "text-brand-800" : "text-foreground/70"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
+          {NAV_LINKS.map(link => {
+            const active = pathname === link.href;
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`group relative text-sm font-medium transition-colors duration-200 hover:text-brand-800 ${
+                  active ? "text-brand-800" : "text-foreground/70"
+                }`}
+              >
+                {link.label}
+                <span
+                  className={`absolute -bottom-1 left-0 h-0.5 rounded-full bg-accent-500 transition-all duration-300 ${
+                    active ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="hidden items-center gap-3 md:flex">
-          <a href={BUSINESS_PHONE_TEL} className="text-sm font-semibold text-brand-800">
+          <a
+            href={BUSINESS_PHONE_TEL}
+            className="text-sm font-semibold text-brand-800 transition-colors duration-200 hover:text-accent-600"
+          >
             {BUSINESS_PHONE_DISPLAY}
           </a>
           <Link
             href="/contact"
-            className="rounded-full bg-accent-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-600"
+            className="rounded-full bg-accent-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent-600 hover:shadow-md"
           >
             Get a Free Quote
           </Link>
@@ -52,7 +63,7 @@ export default function Header() {
           aria-label="Toggle menu"
           aria-expanded={open}
           onClick={() => setOpen(v => !v)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg border border-brand-100 text-brand-800 md:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-lg border border-brand-100 text-brand-800 transition-colors duration-150 hover:bg-brand-50 md:hidden"
         >
           <MenuIcon open={open} className="h-5 w-5" />
         </button>
@@ -66,10 +77,10 @@ export default function Header() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className={`rounded-lg px-3 py-2.5 text-sm font-medium ${
+                className={`rounded-lg px-3 py-2.5 text-sm font-medium transition-colors duration-150 ${
                   pathname === link.href
                     ? "bg-brand-50 text-brand-800"
-                    : "text-foreground/70 hover:bg-brand-50"
+                    : "text-foreground/70 hover:bg-brand-50 hover:text-brand-800"
                 }`}
               >
                 {link.label}
@@ -79,14 +90,14 @@ export default function Header() {
           <div className="mt-3 flex flex-col gap-2">
             <a
               href={BUSINESS_PHONE_TEL}
-              className="rounded-lg border border-brand-100 px-3 py-2.5 text-center text-sm font-semibold text-brand-800"
+              className="rounded-lg border border-brand-100 px-3 py-2.5 text-center text-sm font-semibold text-brand-800 transition-colors duration-150 hover:border-brand-500 hover:bg-brand-50"
             >
               Call {BUSINESS_PHONE_DISPLAY}
             </a>
             <Link
               href="/contact"
               onClick={() => setOpen(false)}
-              className="rounded-lg bg-accent-500 px-3 py-2.5 text-center text-sm font-semibold text-white"
+              className="rounded-lg bg-accent-500 px-3 py-2.5 text-center text-sm font-semibold text-white transition-colors duration-150 hover:bg-accent-600"
             >
               Get a Free Quote
             </Link>

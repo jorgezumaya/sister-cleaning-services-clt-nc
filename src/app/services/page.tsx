@@ -31,7 +31,7 @@ export default function ServicesPage() {
           {FREQUENCIES.map(f => (
             <span
               key={f}
-              className="rounded-full border border-brand-200 bg-white px-4 py-2 text-sm font-medium text-brand-800"
+              className="cursor-default rounded-full border border-brand-200 bg-white px-4 py-2 text-sm font-medium text-brand-800 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-500 hover:bg-accent-500/10 hover:text-accent-600 hover:shadow-sm"
             >
               {f}
             </span>
@@ -42,7 +42,7 @@ export default function ServicesPage() {
       <div className="mt-12 text-center">
         <Link
           href="/contact"
-          className="inline-block rounded-full bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-600"
+          className="inline-block rounded-full bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent-600 hover:shadow-md"
         >
           Get a Free Quote
         </Link>

@@ -20,7 +20,7 @@ export default function ServiceAreasPage() {
         {SERVICE_AREAS.map(area => (
           <div
             key={area}
-            className="rounded-xl border border-brand-100 bg-white px-4 py-3 text-sm font-semibold text-brand-900"
+            className="cursor-default rounded-xl border border-brand-100 bg-white px-4 py-3 text-sm font-semibold text-brand-900 transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-500/50 hover:bg-brand-50 hover:shadow-sm"
           >
             {area}, NC
           </div>
@@ -30,7 +30,7 @@ export default function ServiceAreasPage() {
       <div className="mt-12">
         <Link
           href="/contact"
-          className="inline-block rounded-full bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-600"
+          className="inline-block rounded-full bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent-600 hover:shadow-md"
         >
           Check Your Area
         </Link>

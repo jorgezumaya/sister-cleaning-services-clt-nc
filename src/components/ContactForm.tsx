@@ -120,7 +120,7 @@ export default function ContactForm() {
           onChange={e => setMessage(e.target.value)}
           maxLength={MESSAGE_MAX_LENGTH}
           aria-describedby="message-hint"
-          className="w-full rounded-xl border border-brand-100 px-4 py-2.5 text-sm outline-none focus:border-brand-500"
+          className="w-full rounded-xl border border-brand-100 px-4 py-2.5 text-sm outline-none transition-colors duration-150 hover:border-brand-300 focus:border-brand-500"
         />
         <p id="message-hint" className="mt-1 text-xs text-foreground/50">
           Minimum {MESSAGE_MIN_LENGTH} characters.
@@ -134,7 +134,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={status === "submitting"}
-        className="rounded-full bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-600 disabled:opacity-60"
+        className="rounded-full bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent-600 hover:shadow-md disabled:pointer-events-none disabled:translate-y-0 disabled:opacity-60 disabled:shadow-sm"
       >
         {status === "submitting" ? "Sending…" : "Send Request"}
       </button>
@@ -166,7 +166,7 @@ function Field({
         type={type}
         required={required}
         autoComplete={autoComplete}
-        className="w-full rounded-xl border border-brand-100 px-4 py-2.5 text-sm outline-none focus:border-brand-500"
+        className="w-full rounded-xl border border-brand-100 px-4 py-2.5 text-sm outline-none transition-colors duration-150 hover:border-brand-300 focus:border-brand-500"
       />
     </div>
   );
@@ -182,7 +182,7 @@ function SelectField({ label, name, options }: { label: string; name: string; op
         id={name}
         name={name}
         defaultValue=""
-        className="w-full rounded-xl border border-brand-100 bg-white px-4 py-2.5 text-sm outline-none focus:border-brand-500"
+        className="w-full cursor-pointer rounded-xl border border-brand-100 bg-white px-4 py-2.5 text-sm outline-none transition-colors duration-150 hover:border-brand-300 focus:border-brand-500"
       >
         <option value="" disabled>
           Select {label.toLowerCase()}

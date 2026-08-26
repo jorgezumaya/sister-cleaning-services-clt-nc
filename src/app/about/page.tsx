@@ -23,10 +23,10 @@ export default function AboutPage() {
             quick weekly refresh or a full deep clean.
           </p>
         </div>
-        <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl shadow-lg">
+        <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl bg-[#8fd3c9] shadow-lg">
           <Image
-            src="/images/hero-family.png"
-            alt="The Sisters Cleaning Service family"
+            src="/images/hero-illustration.png"
+            alt="Illustrated cartoon of the two Sisters Cleaning Service owners holding cleaning supplies"
             fill
             sizes="(min-width: 768px) 384px, 90vw"
             className="object-cover object-top"

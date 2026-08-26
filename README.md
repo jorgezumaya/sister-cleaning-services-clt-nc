@@ -73,11 +73,13 @@ instead of erroring.
 
 ## Brand assets
 
-`public/images/hero-family.png` is a placeholder cropped from a phone screenshot of
-the business's Facebook page — good enough to build with, but a proper export (no
-phone status bar, full resolution) from the original source file will look sharper.
-The header currently uses a text + icon wordmark rather than the circular logo, for
-the same reason — drop in a clean logo file when available.
+`public/images/hero-illustration.png` is an AI-generated flat-vector cartoon of the
+two owners (styled after "Dumb Ways to Die") used on the home and about pages — swap
+it for a commissioned illustration or real photography whenever one's ready. The
+header currently uses a text + icon wordmark rather than the circular Facebook logo,
+since that logo only exists as a phone screenshot — drop in a clean logo file when
+available. `src/app/icon.svg` is the browser-tab favicon (a simple sparkle mark in
+the brand colors); replace it the same way if a proper logo mark is designed.
 
 ## Deploying (Cloudflare)
 

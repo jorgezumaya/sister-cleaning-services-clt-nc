@@ -12,8 +12,12 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-4 py-16 sm:px-6">
         <div className="flex items-end justify-between gap-4">
           <h2 className="text-2xl font-bold text-brand-950 sm:text-3xl">What we offer</h2>
-          <Link href="/services" className="text-sm font-semibold text-brand-700 hover:text-brand-800">
-            See all services →
+          <Link
+            href="/services"
+            className="group inline-flex items-center gap-1 text-sm font-semibold text-brand-700 transition-colors duration-200 hover:text-accent-600"
+          >
+            See all services
+            <span className="transition-transform duration-200 group-hover:translate-x-1">→</span>
           </Link>
         </div>
         <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
@@ -28,7 +32,10 @@ export default function Home() {
           <h2 className="text-2xl font-bold sm:text-3xl">Cleaning on your schedule</h2>
           <div className="mt-6 flex flex-wrap gap-3">
             {FREQUENCIES.map(f => (
-              <span key={f} className="rounded-full border border-white/20 px-4 py-2 text-sm font-medium">
+              <span
+                key={f}
+                className="cursor-default rounded-full border border-white/20 px-4 py-2 text-sm font-medium transition-all duration-200 hover:-translate-y-0.5 hover:border-accent-500 hover:bg-accent-500/10 hover:text-accent-500"
+              >
                 {f}
               </span>
             ))}
@@ -56,7 +63,7 @@ export default function Home() {
           </p>
           <Link
             href="/contact"
-            className="mt-6 inline-block rounded-full bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-accent-600"
+            className="mt-6 inline-block rounded-full bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent-600 hover:shadow-md"
           >
             Request a Free Quote
           </Link>

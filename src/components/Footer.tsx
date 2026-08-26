@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import {
   BUSINESS_NAME,
   BUSINESS_TAGLINE,
@@ -17,10 +18,10 @@ export default function Footer() {
           <p className="text-lg font-bold">{BUSINESS_NAME}</p>
           <p className="mt-1 text-sm text-white/70">{BUSINESS_TAGLINE}</p>
           <p className="mt-4 text-sm text-white/70">
-            <a href={BUSINESS_PHONE_TEL} className="hover:text-white">{BUSINESS_PHONE_DISPLAY}</a>
+            <FooterLink href={BUSINESS_PHONE_TEL}>{BUSINESS_PHONE_DISPLAY}</FooterLink>
           </p>
           <p className="text-sm text-white/70">
-            <a href={`mailto:${BUSINESS_EMAIL_DISPLAY}`} className="hover:text-white">{BUSINESS_EMAIL_DISPLAY}</a>
+            <FooterLink href={`mailto:${BUSINESS_EMAIL_DISPLAY}`}>{BUSINESS_EMAIL_DISPLAY}</FooterLink>
           </p>
         </div>
 
@@ -29,9 +30,7 @@ export default function Footer() {
           <ul className="mt-3 flex flex-col gap-2">
             {NAV_LINKS.map(link => (
               <li key={link.href}>
-                <Link href={link.href} className="text-sm text-white/70 hover:text-white">
-                  {link.label}
-                </Link>
+                <FooterLink href={link.href}>{link.label}</FooterLink>
               </li>
             ))}
           </ul>
@@ -39,9 +38,16 @@ export default function Footer() {
 
         <div>
           <p className="text-sm font-semibold uppercase tracking-wide text-white/50">Serving</p>
-          <p className="mt-3 text-sm text-white/70">
-            {SERVICE_AREAS.join(", ")} &amp; nearby areas
-          </p>
+          <div className="mt-3 flex flex-wrap gap-x-2 gap-y-1.5">
+            {SERVICE_AREAS.map(area => (
+              <span
+                key={area}
+                className="cursor-default rounded-full border border-white/10 px-2.5 py-1 text-xs font-medium text-white/70 transition-all duration-200 hover:border-accent-500/60 hover:bg-accent-500/10 hover:text-white"
+              >
+                {area}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -49,5 +55,25 @@ export default function Footer() {
         © {new Date().getFullYear()} {BUSINESS_NAME}. All rights reserved.
       </div>
     </footer>
+  );
+}
+
+const underlineLink =
+  "group relative inline-block text-sm text-white/70 transition-colors duration-200 hover:text-white " +
+  "after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-0 after:bg-accent-500 " +
+  "after:transition-all after:duration-300 hover:after:w-full";
+
+function FooterLink({ href, children }: { href: string; children: ReactNode }) {
+  if (href.startsWith("/")) {
+    return (
+      <Link href={href} className={underlineLink}>
+        {children}
+      </Link>
+    );
+  }
+  return (
+    <a href={href} className={underlineLink}>
+      {children}
+    </a>
   );
 }
