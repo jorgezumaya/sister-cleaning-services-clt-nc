@@ -3,8 +3,9 @@ import Link from "next/link";
 import { SERVICE_AREAS, BUSINESS_CITY } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Service Areas | Sisters Cleaning Service",
-  description: `Cleaning services in ${BUSINESS_CITY} and the surrounding Charlotte, NC metro area.`,
+  title: "Service Areas",
+  description: `House and office cleaning in ${BUSINESS_CITY}, Monroe, Waxhaw, Indian Trail, Wingate, Matthews, and the greater Charlotte, NC metro area.`,
+  alternates: { canonical: "/service-areas" },
 };
 
 export default function ServiceAreasPage() {

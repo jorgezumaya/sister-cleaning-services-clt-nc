@@ -85,3 +85,34 @@ the brand colors); replace it the same way if a proper logo mark is designed.
 
 Build/deploy with [`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare) and set
 the env vars above as Cloudflare secrets/variables in the project settings.
+
+## CI/CD
+
+`.github/workflows/ci.yml` runs on every push/PR to `main`:
+
+- **`quality` job** — `npm ci`, lint, typecheck, test, build. Runs for every push and PR.
+- **`deploy-preview` job** — only on a push to `main` once `quality` passes. Publishes a
+  free **GitHub Pages** preview at `https://<owner>.github.io/<repo>/` as a placeholder
+  until the real Cloudflare domain is picked.
+
+One-time setup: in the repo's Settings → Pages, set **Source** to **GitHub Actions**
+(the workflow handles the rest).
+
+Because GitHub Pages only serves static files, that job builds a **static export**
+(`npm run build:pages`, `output: "export"` in `next.config.ts`) with `src/app/api`
+removed from the CI checkout first — Next.js static export can't include server API
+routes. `ContactForm` detects this at build time (`NEXT_PUBLIC_STATIC_EXPORT`) and
+shows a "call or text us" message instead of trying to POST to a route that doesn't
+exist there. None of this affects the real `npm run build` used for Cloudflare, which
+keeps the working `/api/contact` route.
+
+## SEO
+
+- Per-page `<title>`/description via the App Router `metadata` export, with a shared
+  title template (`%s | Sisters Cleaning Service`) in `src/app/layout.tsx`
+- `src/app/sitemap.ts` and `src/app/robots.ts` generate `sitemap.xml` / `robots.txt`
+- Open Graph + Twitter card metadata, backed by `public/images/og-image.png`
+- `LocalBusiness` JSON-LD structured data (name, phone, service areas, Facebook link)
+  in the root layout, for richer Google search results
+- `NEXT_PUBLIC_SITE_URL` (see `.env.example`) drives all of the above — set it to the
+  real domain once it's live; the GitHub Pages workflow sets its own value automatically

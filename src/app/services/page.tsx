@@ -4,8 +4,11 @@ import ServiceCard from "@/components/ServiceCard";
 import { SERVICE_TYPES, FREQUENCIES } from "@/lib/constants";
 
 export const metadata: Metadata = {
-  title: "Services | Sisters Cleaning Service",
-  description: "Residential and commercial cleaning services in the greater Charlotte, NC area.",
+  title: "Cleaning Services",
+  description:
+    "Residential, commercial, deep, and partial cleaning in Marshville, Monroe, Waxhaw, Indian Trail, " +
+    "and the greater Charlotte, NC area — daily, weekly, bi-weekly, monthly, or one-time.",
+  alternates: { canonical: "/services" },
 };
 
 export default function ServicesPage() {

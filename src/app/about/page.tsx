@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { BUSINESS_NAME, BUSINESS_TAGLINE, BUSINESS_CITY } from "@/lib/constants";
+import { withBasePath } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "About | Sisters Cleaning Service",
-  description: `About ${BUSINESS_NAME}, a family-run cleaning company serving ${BUSINESS_CITY} and the greater Charlotte, NC area.`,
+  title: "About Us",
+  description: `About ${BUSINESS_NAME}, a family-run house cleaning company based in ${BUSINESS_CITY} serving the greater Charlotte, NC area.`,
+  alternates: { canonical: "/about" },
 };
 
 export default function AboutPage() {
@@ -25,7 +27,7 @@ export default function AboutPage() {
         </div>
         <div className="relative mx-auto aspect-[4/5] w-full max-w-sm overflow-hidden rounded-3xl bg-[#8fd3c9] shadow-lg">
           <Image
-            src="/images/hero-illustration.png"
+            src={withBasePath("/images/hero-illustration.png")}
             alt="Illustrated cartoon of the two Sisters Cleaning Service owners holding cleaning supplies"
             fill
             sizes="(min-width: 768px) 384px, 90vw"

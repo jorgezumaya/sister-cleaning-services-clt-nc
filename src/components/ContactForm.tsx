@@ -1,9 +1,21 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { SERVICE_TYPES, FREQUENCIES, MESSAGE_MIN_LENGTH, MESSAGE_MAX_LENGTH } from "@/lib/constants";
+import {
+  SERVICE_TYPES,
+  FREQUENCIES,
+  MESSAGE_MIN_LENGTH,
+  MESSAGE_MAX_LENGTH,
+  BUSINESS_PHONE_DISPLAY,
+  BUSINESS_PHONE_TEL,
+} from "@/lib/constants";
 
-type Status = "idle" | "submitting" | "success" | "error";
+// The GitHub Pages preview is a static export with no /api/contact route
+// (see next.config.ts) — this flag lets the form degrade gracefully there
+// instead of silently 404ing.
+const IS_STATIC_PREVIEW = process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
+
+type Status = "idle" | "submitting" | "success" | "error" | "preview";
 
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
@@ -41,6 +53,11 @@ export default function ContactForm() {
       return;
     }
 
+    if (IS_STATIC_PREVIEW) {
+      setStatus("preview");
+      return;
+    }
+
     setStatus("submitting");
 
     try {
@@ -70,6 +87,21 @@ export default function ContactForm() {
         <h3 className="text-lg font-bold text-brand-950">Thanks — message sent!</h3>
         <p className="mt-2 text-sm text-foreground/70">
           We&apos;ll get back to you shortly. For anything urgent, feel free to call or text too.
+        </p>
+      </div>
+    );
+  }
+
+  if (status === "preview") {
+    return (
+      <div className="rounded-2xl bg-brand-50 p-8 text-center">
+        <h3 className="text-lg font-bold text-brand-950">This is a preview site</h3>
+        <p className="mt-2 text-sm text-foreground/70">
+          The quote form isn&apos;t connected here yet. Please call or text{" "}
+          <a href={BUSINESS_PHONE_TEL} className="font-semibold text-brand-800 underline">
+            {BUSINESS_PHONE_DISPLAY}
+          </a>{" "}
+          and we&apos;ll get back to you right away.
         </p>
       </div>
     );

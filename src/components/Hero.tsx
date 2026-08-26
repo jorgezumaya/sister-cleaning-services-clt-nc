@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BUSINESS_CITY, BUSINESS_TAGLINE } from "@/lib/constants";
+import { withBasePath } from "@/lib/site";
 import ContactButtons from "@/components/ContactButtons";
 
 export default function Hero() {
@@ -39,7 +40,7 @@ export default function Hero() {
 
         <div className="group relative mx-auto aspect-square w-full max-w-md overflow-hidden rounded-3xl bg-[#8fd3c9] shadow-lg sm:aspect-[4/5]">
           <Image
-            src="/images/hero-illustration.png"
+            src={withBasePath("/images/hero-illustration.png")}
             alt="Illustrated cartoon of the two Sisters Cleaning Service owners holding cleaning supplies"
             fill
             priority

@@ -3,8 +3,11 @@ import ContactForm from "@/components/ContactForm";
 import ContactButtons from "@/components/ContactButtons";
 
 export const metadata: Metadata = {
-  title: "Contact | Sisters Cleaning Service",
-  description: "Get a free cleaning quote from Sisters Cleaning Service.",
+  title: "Contact & Free Quote",
+  description:
+    "Get a free house or office cleaning quote from Sisters Cleaning Service — call, text, " +
+    "WhatsApp, email, or fill out our quote form.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {

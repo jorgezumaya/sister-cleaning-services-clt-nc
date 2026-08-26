@@ -2,8 +2,11 @@ import type { Metadata } from "next";
 import PhotoGallery from "@/components/PhotoGallery";
 
 export const metadata: Metadata = {
-  title: "Gallery | Sisters Cleaning Service",
-  description: "Recent cleaning work from Sisters Cleaning Service.",
+  title: "Cleaning Photo Gallery",
+  description:
+    "See recent before-and-after house and office cleaning work from Sisters Cleaning Service " +
+    "in the greater Charlotte, NC area.",
+  alternates: { canonical: "/gallery" },
 };
 
 export default function GalleryPage() {
