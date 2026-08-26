@@ -40,6 +40,30 @@ describe("validateContactPayload", () => {
     expect(validateContactPayload({ ...validPayload, phone: "" })).toBe("Phone is required.");
   });
 
+  it("rejects a phone number containing letters", () => {
+    expect(validateContactPayload({ ...validPayload, phone: "83u2084u30u45023u4590328-9" })).toBe(
+      "Please enter a valid phone number."
+    );
+  });
+
+  it("rejects a phone number with too few digits", () => {
+    expect(validateContactPayload({ ...validPayload, phone: "12-345" })).toBe(
+      "Please enter a valid phone number."
+    );
+  });
+
+  it("rejects a phone number that's all separators, no real digits", () => {
+    expect(validateContactPayload({ ...validPayload, phone: "----------" })).toBe(
+      "Please enter a valid phone number."
+    );
+  });
+
+  it("accepts common real-world phone formats", () => {
+    for (const phone of ["7045551234", "(704) 555-1234", "+1 704-555-1234", "704.555.1234"]) {
+      expect(validateContactPayload({ ...validPayload, phone })).toBeNull();
+    }
+  });
+
   it("requires an email", () => {
     expect(validateContactPayload({ ...validPayload, email: "" })).toBe("Email is required.");
   });

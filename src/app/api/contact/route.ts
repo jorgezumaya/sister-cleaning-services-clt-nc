@@ -18,6 +18,17 @@ const RESEND_ENDPOINT = "https://api.resend.com/emails";
 // valid-but-unusual addresses. Resend itself rejects anything it can't send to.
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Only digits, spaces, and common separators (+, (), -, .) — no letters, so
+// garbage like "83u2084u30u45023u4590328-9" can't pass. Digit count (not
+// string length) is checked separately to allow for formatting characters
+// while still rejecting e.g. a string of dashes with no real digits.
+const PHONE_CHARS_RE = /^[+\d(][\d\s().-]*$/;
+function isValidPhone(phone: string): boolean {
+  if (!PHONE_CHARS_RE.test(phone)) return false;
+  const digitCount = phone.replace(/\D/g, "").length;
+  return digitCount >= 7 && digitCount <= 15;
+}
+
 const VALID_SERVICE_TYPES = new Set<string>(SERVICE_TYPES.map(s => s.name));
 const VALID_FREQUENCIES = new Set<string>(FREQUENCIES.map(f => f.label));
 
@@ -75,6 +86,7 @@ export function validateContactPayload(body: Partial<ContactPayload>): string | 
 
   if (!name) return "Name is required.";
   if (!phone) return "Phone is required.";
+  if (!isValidPhone(phone)) return "Please enter a valid phone number.";
   if (!email) return "Email is required.";
   if (!EMAIL_RE.test(email)) return "Please enter a valid email address.";
   if (serviceType && !VALID_SERVICE_TYPES.has(serviceType)) return "Invalid service type.";

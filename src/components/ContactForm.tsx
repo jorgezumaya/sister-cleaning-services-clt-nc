@@ -136,6 +136,8 @@ export default function ContactForm() {
           required
           autoComplete="tel"
           maxLength={PHONE_MAX_LENGTH}
+          pattern="[+]?[0-9()\-.\s]{7,}"
+          title={t("contactForm.phoneHint")}
         />
       </div>
 
@@ -215,6 +217,8 @@ function Field({
   required,
   autoComplete,
   maxLength,
+  pattern,
+  title,
 }: {
   label: string;
   name: string;
@@ -222,6 +226,8 @@ function Field({
   required?: boolean;
   autoComplete?: string;
   maxLength?: number;
+  pattern?: string;
+  title?: string;
 }) {
   return (
     <div>
@@ -235,6 +241,8 @@ function Field({
         required={required}
         autoComplete={autoComplete}
         maxLength={maxLength}
+        pattern={pattern}
+        title={title}
         className="w-full rounded-xl border border-brand-100 px-4 py-2.5 text-sm outline-none transition-colors duration-150 hover:border-brand-300 focus:border-brand-500"
       />
     </div>

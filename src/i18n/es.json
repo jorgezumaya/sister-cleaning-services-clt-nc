@@ -74,6 +74,7 @@
   "contactForm": {
     "name": "Nombre",
     "phone": "Teléfono",
+    "phoneHint": "Ingresa un número de teléfono válido.",
     "email": "Correo electrónico",
     "address": "Dirección / área",
     "service": "Servicio",
