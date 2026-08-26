@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useMemo, useSyncExternalStore, type ReactNode } from "react";
 import en from "@/i18n/en.json";
 import es from "@/i18n/es.json";
 
@@ -27,6 +27,46 @@ function interpolate(template: string, params?: Params): string {
   return template.replace(/\{(\w+)\}/g, (match, key) => (key in params ? String(params[key]) : match));
 }
 
+// A tiny external store (read via useSyncExternalStore) rather than
+// useState+useEffect: the server snapshot is always "en", and React only
+// switches to the real (possibly localStorage-backed) client snapshot after
+// hydration completes, so there's no hydration-mismatch flash to manage by hand.
+let currentLang: Lang | null = null;
+const listeners = new Set<() => void>();
+
+function readStoredLang(): Lang {
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    return stored === "es" ? "es" : "en";
+  } catch {
+    return "en";
+  }
+}
+
+function getSnapshot(): Lang {
+  if (currentLang === null) currentLang = readStoredLang();
+  return currentLang;
+}
+
+function getServerSnapshot(): Lang {
+  return "en";
+}
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+function commitLang(next: Lang) {
+  currentLang = next;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, next);
+  } catch {
+    // Non-fatal — the toggle still works for the current page view.
+  }
+  listeners.forEach(listener => listener());
+}
+
 type LanguageContextValue = {
   lang: Lang;
   setLang: (lang: Lang) => void;
@@ -37,27 +77,9 @@ type LanguageContextValue = {
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  // Starts as "en" on every render (server and first client render) to avoid
-  // a hydration mismatch, then syncs from localStorage right after mount.
-  const [lang, setLangState] = useState<Lang>("en");
+  const lang = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
-  useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored === "en" || stored === "es") setLangState(stored);
-    } catch {
-      // localStorage unavailable (private mode, etc.) — stay on the default.
-    }
-  }, []);
-
-  const setLang = useCallback((next: Lang) => {
-    setLangState(next);
-    try {
-      window.localStorage.setItem(STORAGE_KEY, next);
-    } catch {
-      // Non-fatal — the toggle still works for the current page view.
-    }
-  }, []);
+  const setLang = useCallback((next: Lang) => commitLang(next), []);
 
   const t = useCallback(
     (key: string, params?: Params) => {
