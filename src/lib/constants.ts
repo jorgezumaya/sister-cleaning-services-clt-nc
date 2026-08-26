@@ -2,12 +2,6 @@ export const BUSINESS_NAME = "Sisters Cleaning Service";
 export const BUSINESS_TAGLINE = "A Clean Home, A Happy Home";
 export const BUSINESS_CITY = "Marshville, NC";
 
-// TODO: swap for a dedicated business inbox before launch so a personal
-// address is never the one printed on the site (matches the AvilaContracting
-// pattern of a business-only email, kept out of client-exposed constants —
-// the real destination lives server-side in CONTACT_TO_EMAIL, see api/contact/route.ts).
-export const BUSINESS_EMAIL_DISPLAY = "info@sisterscleaningservicenc.com";
-
 export const BUSINESS_PHONE_DISPLAY = "(704) 261-5942";
 export const BUSINESS_PHONE_TEL = "tel:+17042615942";
 export const BUSINESS_PHONE_SMS = "sms:+17042615942";

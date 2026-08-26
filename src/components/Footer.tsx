@@ -8,7 +8,6 @@ import {
   BUSINESS_NAME,
   BUSINESS_PHONE_DISPLAY,
   BUSINESS_PHONE_TEL,
-  BUSINESS_EMAIL_DISPLAY,
   BUSINESS_FACEBOOK,
   NAV_LINKS,
   SERVICE_AREAS,
@@ -25,9 +24,6 @@ export default function Footer() {
           <p className="mt-1 text-sm text-white/70">{t("hero.tagline")}</p>
           <p className="mt-4 text-sm text-white/70">
             <FooterLink href={BUSINESS_PHONE_TEL}>{BUSINESS_PHONE_DISPLAY}</FooterLink>
-          </p>
-          <p className="text-sm text-white/70">
-            <FooterLink href={`mailto:${BUSINESS_EMAIL_DISPLAY}`}>{BUSINESS_EMAIL_DISPLAY}</FooterLink>
           </p>
           <a
             href={BUSINESS_FACEBOOK}

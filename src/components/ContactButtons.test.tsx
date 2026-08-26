@@ -11,9 +11,6 @@ describe("ContactButtons", () => {
     expect(screen.getByRole("link", { name: /call/i })).toHaveAttribute("href", BUSINESS_PHONE_TEL);
     expect(screen.getByRole("link", { name: /text/i })).toHaveAttribute("href", BUSINESS_PHONE_SMS);
     expect(screen.getByRole("link", { name: /whatsapp/i })).toHaveAttribute("href", BUSINESS_WHATSAPP);
-    expect(screen.getByRole("link", { name: /email/i })).toHaveAttribute(
-      "href",
-      expect.stringContaining("mailto:")
-    );
+    expect(screen.queryByRole("link", { name: /email/i })).not.toBeInTheDocument();
   });
 });

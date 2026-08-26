@@ -32,9 +32,7 @@
     "text": "Text",
     "textSub": "Send a message",
     "whatsapp": "WhatsApp",
-    "whatsappSub": "Chat with us",
-    "email": "Email",
-    "emailSub": "Send details"
+    "whatsappSub": "Chat with us"
   },
   "home": {
     "whatWeOffer": "What we offer",

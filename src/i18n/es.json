@@ -32,9 +32,7 @@
     "text": "Mensaje",
     "textSub": "Enviar un mensaje",
     "whatsapp": "WhatsApp",
-    "whatsappSub": "Chatea con nosotros",
-    "email": "Correo",
-    "emailSub": "Enviar detalles"
+    "whatsappSub": "Chatea con nosotros"
   },
   "home": {
     "whatWeOffer": "Lo que ofrecemos",
