@@ -1,6 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { POST, validateContactPayload } from "./route";
 import { MESSAGE_MIN_LENGTH, MESSAGE_MAX_LENGTH } from "@/lib/constants";
+
+const saveContactSubmission = vi.fn();
+vi.mock("@/lib/firestore", () => ({
+  saveContactSubmission: (...args: unknown[]) => saveContactSubmission(...args),
+}));
+
+const { POST, validateContactPayload } = await import("./route");
 
 const LONG_ENOUGH_MESSAGE = "a".repeat(MESSAGE_MIN_LENGTH);
 
@@ -17,10 +23,11 @@ const validPayload = {
   renderedAt: String(Date.now() - 10_000),
 };
 
-function makeRequest(body: unknown) {
+function makeRequest(body: unknown, headers?: Record<string, string>) {
   return new Request("http://localhost/api/contact", {
     method: "POST",
     body: JSON.stringify(body),
+    headers,
   });
 }
 
@@ -87,6 +94,8 @@ describe("POST /api/contact", () => {
     process.env.RESEND_API_KEY = "test-key";
     process.env.CONTACT_TO_EMAIL = "info@sisterscleaningservicenc.com";
     process.env.CONTACT_FROM_EMAIL = "quotes@sisterscleaningservicenc.com";
+    delete process.env.CONTACT_CC_EMAIL;
+    saveContactSubmission.mockClear();
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({ ok: true, text: async () => "" })
@@ -171,5 +180,47 @@ describe("POST /api/contact", () => {
     );
     const res = await POST(makeRequest(validPayload));
     expect(res.status).toBe(502);
+  });
+
+  it("includes the CF-Connecting-IP header in the email and the saved submission", async () => {
+    const res = await POST(
+      makeRequest(validPayload, { "cf-connecting-ip": "203.0.113.42" })
+    );
+    expect(res.status).toBe(200);
+
+    const [, options] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+    const sentBody = JSON.parse(options.body as string);
+    expect(sentBody.html).toContain("203.0.113.42");
+
+    expect(saveContactSubmission).toHaveBeenCalledWith(
+      expect.objectContaining({ ip: "203.0.113.42", name: "Jane Doe" })
+    );
+  });
+
+  it("falls back to X-Forwarded-For, then \"unknown\", when CF-Connecting-IP is absent", async () => {
+    await POST(makeRequest(validPayload, { "x-forwarded-for": "198.51.100.7, 10.0.0.1" }));
+    expect(saveContactSubmission).toHaveBeenCalledWith(expect.objectContaining({ ip: "198.51.100.7" }));
+
+    saveContactSubmission.mockClear();
+    await POST(makeRequest(validPayload));
+    expect(saveContactSubmission).toHaveBeenCalledWith(expect.objectContaining({ ip: "unknown" }));
+  });
+
+  it("does not block sending the email when saving to Firestore fails", async () => {
+    saveContactSubmission.mockRejectedValueOnce(new Error("firestore is down"));
+    const res = await POST(makeRequest(validPayload));
+    expect(res.status).toBe(200);
+    expect(fetch).toHaveBeenCalledTimes(1);
+  });
+
+  it("CCs an additional recipient only when CONTACT_CC_EMAIL is set", async () => {
+    await POST(makeRequest(validPayload));
+    let [, options] = (fetch as ReturnType<typeof vi.fn>).mock.calls[0];
+    expect(JSON.parse(options.body as string).cc).toBeUndefined();
+
+    process.env.CONTACT_CC_EMAIL = "ana@sisterscleaningservicenc.com";
+    await POST(makeRequest(validPayload));
+    [, options] = (fetch as ReturnType<typeof vi.fn>).mock.calls[1];
+    expect(JSON.parse(options.body as string).cc).toBe("ana@sisterscleaningservicenc.com");
   });
 });

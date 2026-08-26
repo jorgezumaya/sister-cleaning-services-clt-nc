@@ -35,6 +35,7 @@ Required env vars (see `.env.example`):
 - `CONTACT_TO_EMAIL` — where quote requests land (use a dedicated business inbox,
   not a personal address)
 - `CONTACT_FROM_EMAIL` — the verified sending address/domain in Resend
+- `CONTACT_CC_EMAIL` — optional, an additional recipient CC'd on every request
 
 The route uses the standard Node.js runtime; deploying to Cloudflare with
 [`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare) (the current recommended
@@ -54,22 +55,35 @@ Storage security rules, not by hiding these values):
 - `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
 - `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET`
 
-Set Storage rules to public read / no public write, e.g.:
+Storage security rules live in `storage.rules` (public read of `gallery/` only, no
+public write) and deploy from the repo rather than being hand-edited in the console:
 
-```
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    match /gallery/{fileName} {
-      allow read: if true;
-      allow write: if false; // upload via the Firebase console instead
-    }
-  }
-}
+```bash
+firebase deploy --only storage --project sisters-cleaning-company
 ```
 
-Until these are configured, the gallery shows a "photos coming soon" placeholder
-instead of erroring.
+Until the `NEXT_PUBLIC_FIREBASE_*` vars are configured, the gallery shows a "photos
+coming soon" placeholder instead of erroring.
+
+**Note:** `NEXT_PUBLIC_*` vars are inlined into the client bundle at build time. On
+Cloudflare, they need to be set under **Build variables and secrets** (not the runtime
+Variables and secrets panel) so `opennextjs-cloudflare build`'s `next build` step
+actually has them.
+
+## Contact submissions (Firestore)
+
+Every `/api/contact` POST is also saved to a `contactSubmissions` collection in
+Firestore (best-effort — a Firestore outage never blocks the actual email), including
+the submitter's IP (`CF-Connecting-IP`, set by Cloudflare and not client-spoofable in
+production). Rules live in `firestore.rules` (create-only, shape-checked; no client
+ever reads the collection back) and deploy the same way:
+
+```bash
+firebase deploy --only firestore --project sisters-cleaning-company
+```
+
+Requires a Firestore database to exist on the project (Firebase console → Firestore
+Database → Create database) — it isn't provisioned automatically the way Storage is.
 
 ## Brand assets
 

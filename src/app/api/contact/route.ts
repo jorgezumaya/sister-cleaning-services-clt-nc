@@ -9,6 +9,7 @@ import {
   SERVICE_TYPES,
   FREQUENCIES,
 } from "@/lib/constants";
+import { saveContactSubmission } from "@/lib/firestore";
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
 
@@ -49,6 +50,19 @@ function sanitizeLine(value: string, maxLength: number): string {
     .replace(/[\r\n\t\x00-\x1f\x7f]/g, " ")
     .trim()
     .slice(0, maxLength);
+}
+
+/**
+ * Cloudflare sets `CF-Connecting-IP` from the actual TCP connection — a
+ * client can't spoof it in production. `X-Forwarded-For` is a fallback for
+ * local dev (`next dev` doesn't run behind Cloudflare), where it's not a
+ * trustworthy signal but there's nothing to abuse locally either.
+ */
+function getClientIp(request: Request): string {
+  const cfIp = request.headers.get("cf-connecting-ip");
+  if (cfIp) return cfIp;
+  const forwardedFor = request.headers.get("x-forwarded-for");
+  return forwardedFor?.split(",")[0]?.trim() || "unknown";
 }
 
 /** Server-side mirror of the client-side rules in ContactForm — never trust the client alone. */
@@ -112,10 +126,21 @@ export async function POST(request: Request) {
   const frequency = sanitizeLine(body.frequency ?? "", 100);
   const address = sanitizeLine(body.address ?? "", ADDRESS_MAX_LENGTH);
   const message = body.message!.trim().slice(0, MESSAGE_MAX_LENGTH);
+  const ip = getClientIp(request);
+
+  // Best-effort — a Firestore hiccup should never block the email itself.
+  // saveContactSubmission already swallows its own errors; this catch is
+  // defense in depth in case that contract ever changes.
+  try {
+    await saveContactSubmission({ name, phone, email, serviceType, frequency, address, message, ip });
+  } catch (err) {
+    console.error("[contact] saveContactSubmission threw unexpectedly:", err);
+  }
 
   const apiKey = process.env.RESEND_API_KEY;
   const toEmail = process.env.CONTACT_TO_EMAIL;
   const fromEmail = process.env.CONTACT_FROM_EMAIL;
+  const ccEmail = process.env.CONTACT_CC_EMAIL;
 
   if (!apiKey || !toEmail || !fromEmail) {
     console.error("[contact] missing RESEND_API_KEY / CONTACT_TO_EMAIL / CONTACT_FROM_EMAIL");
@@ -134,6 +159,7 @@ export async function POST(request: Request) {
     <p><strong>Frequency:</strong> ${escapeHtml(frequency || "—")}</p>
     <p><strong>Address / area:</strong> ${escapeHtml(address || "—")}</p>
     <p><strong>Message:</strong><br />${escapeHtml(message).replace(/\n/g, "<br />")}</p>
+    <p style="color:#888; font-size:12px;"><strong>Submitted from IP:</strong> ${escapeHtml(ip)}</p>
   `;
 
   const res = await fetch(RESEND_ENDPOINT, {
@@ -145,6 +171,7 @@ export async function POST(request: Request) {
     body: JSON.stringify({
       from: fromEmail,
       to: toEmail,
+      ...(ccEmail ? { cc: ccEmail } : {}),
       reply_to: email,
       subject: `New quote request from ${name}`,
       html,

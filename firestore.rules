@@ -1,0 +1,20 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Written only by the /api/contact route (public web API key, no auth —
+    // same model as storage.rules). No client ever reads this collection
+    // back, so read/update/delete stay fully closed; create is allowed but
+    // shape-checked so a direct write can't dump arbitrary/oversized data.
+    match /contactSubmissions/{submissionId} {
+      allow read, update, delete: if false;
+      allow create: if
+        request.resource.data.name is string &&
+        request.resource.data.name.size() > 0 && request.resource.data.name.size() <= 100 &&
+        request.resource.data.phone is string && request.resource.data.phone.size() <= 30 &&
+        request.resource.data.email is string && request.resource.data.email.size() <= 254 &&
+        request.resource.data.message is string &&
+        request.resource.data.message.size() >= 30 && request.resource.data.message.size() <= 500 &&
+        request.resource.data.ip is string && request.resource.data.ip.size() <= 64;
+    }
+  }
+}
