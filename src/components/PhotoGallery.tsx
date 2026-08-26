@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { listAll, ref, getDownloadURL } from "firebase/storage";
 import { storage, isFirebaseConfigured } from "@/lib/firebase";
+import { useLanguage } from "@/lib/i18n";
 
 const PHOTOS_FOLDER = "gallery";
 const INTERVAL_MS = 4500;
@@ -23,6 +24,7 @@ function titleFromFilename(filename: string): string {
  * and it shows up here automatically on next page load.
  */
 export default function PhotoGallery() {
+  const { t } = useLanguage();
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(isFirebaseConfigured);
   const [index, setIndex] = useState(0);
@@ -72,7 +74,7 @@ export default function PhotoGallery() {
   if (loading) {
     return (
       <div className="flex h-72 items-center justify-center rounded-2xl bg-brand-50 text-sm text-foreground/50">
-        Loading photos…
+        {t("gallery.loading")}
       </div>
     );
   }
@@ -80,10 +82,8 @@ export default function PhotoGallery() {
   if (photos.length === 0) {
     return (
       <div className="flex h-72 flex-col items-center justify-center gap-1 rounded-2xl bg-brand-50 text-center text-sm text-foreground/50">
-        <p>Photos coming soon.</p>
-        {!isFirebaseConfigured && (
-          <p className="text-xs">(Connect Firebase Storage to enable the live gallery.)</p>
-        )}
+        <p>{t("gallery.empty")}</p>
+        {!isFirebaseConfigured && <p className="text-xs">{t("gallery.notConfigured")}</p>}
       </div>
     );
   }

@@ -1,0 +1,115 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "services": "Servicios",
+    "gallery": "Galería",
+    "about": "Nosotros",
+    "serviceAreas": "Áreas de Servicio",
+    "contact": "Contacto"
+  },
+  "header": {
+    "getFreeQuote": "Cotización Gratis",
+    "callLabel": "Llamar {phone}",
+    "facebookLabel": "Sisters Cleaning Service en Facebook",
+    "toggleMenu": "Abrir menú"
+  },
+  "language": {
+    "switchToEnglish": "Cambiar a inglés",
+    "switchToSpanish": "Cambiar a español",
+    "en": "EN",
+    "es": "ES"
+  },
+  "hero": {
+    "locationBadge": "{city} y el área metropolitana de Charlotte",
+    "tagline": "Un Hogar Limpio, Un Hogar Feliz",
+    "description": "Limpieza residencial y comercial — diaria, semanal, quincenal, mensual o de una sola vez. Confiable, detallada y fácil de reservar.",
+    "ctaQuote": "Cotización Gratis",
+    "ctaServices": "Ver Servicios"
+  },
+  "contactButtons": {
+    "call": "Llamar",
+    "callSub": "{phone}",
+    "text": "Mensaje",
+    "textSub": "Enviar un mensaje",
+    "whatsapp": "WhatsApp",
+    "whatsappSub": "Chatea con nosotros",
+    "email": "Correo",
+    "emailSub": "Enviar detalles"
+  },
+  "home": {
+    "whatWeOffer": "Lo que ofrecemos",
+    "seeAllServices": "Ver todos los servicios",
+    "cleaningOnSchedule": "Limpieza según tu horario",
+    "recentWork": "Trabajos recientes",
+    "recentWorkDesc": "Un vistazo a los hogares y espacios que hemos limpiado recientemente.",
+    "servingHeading": "Con orgullo servimos a {area} y pueblos cercanos",
+    "requestFreeQuote": "Solicitar Cotización Gratis"
+  },
+  "services": {
+    "title": "Nuestros Servicios",
+    "intro": "Sea cual sea el espacio, sea cual sea el horario — adaptamos la limpieza a lo que necesitas.",
+    "chooseFrequency": "Elige tu frecuencia",
+    "chooseFrequencyDesc": "Cada servicio se puede programar de la forma que mejor te convenga.",
+    "getFreeQuote": "Cotización Gratis"
+  },
+  "gallery": {
+    "title": "Trabajos Recientes",
+    "description": "Un vistazo a los hogares y espacios que hemos limpiado recientemente. Se agregan nuevas fotos con regularidad.",
+    "loading": "Cargando fotos…",
+    "empty": "Fotos próximamente.",
+    "notConfigured": "(Conecta Firebase Storage para activar la galería en vivo.)"
+  },
+  "about": {
+    "title": "Nosotros",
+    "paragraph1": "{name} es una empresa de limpieza familiar con sede en {city}, que sirve con orgullo a hogares y negocios en toda el área metropolitana de Charlotte, NC.",
+    "paragraph2": "{tagline} — esa es la idea detrás de todo lo que hacemos. Tratamos cada hogar y oficina como si fuera nuestro, con la misma atención al detalle, ya sea una limpieza semanal rápida o una limpieza profunda completa."
+  },
+  "serviceAreas": {
+    "title": "Áreas de Servicio",
+    "description": "Con sede en {city}, servimos hogares y negocios en toda el área metropolitana de Charlotte, NC. ¿No estás seguro si cubrimos tu área? Contáctanos — con gusto lo confirmamos.",
+    "checkYourArea": "Consulta tu Área"
+  },
+  "contact": {
+    "title": "Cotización Gratis",
+    "description": "Cuéntanos un poco sobre el espacio y con qué frecuencia te gustaría que lo limpiemos — te contactaremos con una cotización. ¿Prefieres hablar de inmediato? Usa los botones de abajo."
+  },
+  "contactForm": {
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "email": "Correo electrónico",
+    "address": "Dirección / área",
+    "service": "Servicio",
+    "frequency": "Frecuencia",
+    "message": "Cuéntanos qué necesitas",
+    "messageHint": "Mínimo {min} caracteres.",
+    "selectPrefix": "Selecciona",
+    "submit": "Enviar Solicitud",
+    "submitting": "Enviando…",
+    "errorEmailRequired": "El correo electrónico es obligatorio.",
+    "errorMessageTooShort": "Cuéntanos un poco más — al menos {min} caracteres.",
+    "errorMessageTooLong": "Por favor manten tu mensaje bajo {max} caracteres.",
+    "errorGeneric": "Algo salió mal. Por favor intenta de nuevo.",
+    "successTitle": "¡Gracias — mensaje enviado!",
+    "successBody": "Nos pondremos en contacto contigo pronto. Para algo urgente, no dudes en llamar o enviar un mensaje también.",
+    "previewTitle": "Este es un sitio de vista previa",
+    "previewBody": "El formulario de cotización aún no está conectado aquí. Llama o envía un mensaje y te responderemos de inmediato:"
+  },
+  "footer": {
+    "site": "Sitio",
+    "serving": "Servimos",
+    "allRightsReserved": "© {year} {name}. Todos los derechos reservados."
+  },
+  "serviceTypes": {
+    "residential": { "name": "Limpieza Residencial", "description": "Casas, apartamentos y condominios — impecables según tu horario." },
+    "commercial": { "name": "Limpieza Comercial", "description": "Oficinas y pequeños negocios que necesitan un espacio confiablemente limpio." },
+    "deep": { "name": "Limpieza Profunda", "description": "Una limpieza detallada de arriba a abajo para mudanzas o un nuevo comienzo." },
+    "partial": { "name": "Limpieza Parcial", "description": "Limpieza enfocada en las habitaciones o áreas específicas que más lo necesitan." }
+  },
+  "frequencies": {
+    "daily": "Diaria",
+    "weekly": "Semanal",
+    "biWeekly": "Quincenal",
+    "monthly": "Mensual",
+    "oneTime": "Única Vez"
+  }
+}

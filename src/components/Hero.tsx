@@ -1,36 +1,40 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { BUSINESS_CITY, BUSINESS_TAGLINE } from "@/lib/constants";
+import { BUSINESS_CITY } from "@/lib/constants";
 import { withBasePath } from "@/lib/site";
+import { useLanguage } from "@/lib/i18n";
 import ContactButtons from "@/components/ContactButtons";
 
 export default function Hero() {
+  const { t } = useLanguage();
+
   return (
     <section className="bg-brand-50">
       <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 md:py-20">
         <div>
           <p className="inline-block rounded-full bg-brand-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-700">
-            {BUSINESS_CITY} &amp; the greater Charlotte area
+            {t("hero.locationBadge", { city: BUSINESS_CITY })}
           </p>
           <h1 className="mt-4 text-3xl font-extrabold leading-tight text-brand-950 sm:text-4xl md:text-5xl">
-            {BUSINESS_TAGLINE}
+            {t("hero.tagline")}
           </h1>
           <p className="mt-4 max-w-md text-base text-foreground/70 sm:text-lg">
-            Residential and commercial cleaning — daily, weekly, bi-weekly, monthly, or one time.
-            Reliable, detail-oriented, and easy to book.
+            {t("hero.description")}
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href="/contact"
               className="rounded-full bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent-600 hover:shadow-md"
             >
-              Get a Free Quote
+              {t("hero.ctaQuote")}
             </Link>
             <Link
               href="/services"
               className="rounded-full border border-brand-200 bg-white px-6 py-3 text-sm font-semibold text-brand-800 transition-all duration-200 hover:-translate-y-0.5 hover:border-brand-500 hover:text-brand-900 hover:shadow-sm"
             >
-              View Services
+              {t("hero.ctaServices")}
             </Link>
           </div>
           <div className="mt-8">

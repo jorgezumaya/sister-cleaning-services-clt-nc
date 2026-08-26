@@ -1,0 +1,115 @@
+{
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "gallery": "Gallery",
+    "about": "About",
+    "serviceAreas": "Service Areas",
+    "contact": "Contact"
+  },
+  "header": {
+    "getFreeQuote": "Get a Free Quote",
+    "callLabel": "Call {phone}",
+    "facebookLabel": "Sisters Cleaning Service on Facebook",
+    "toggleMenu": "Toggle menu"
+  },
+  "language": {
+    "switchToEnglish": "Switch to English",
+    "switchToSpanish": "Switch to Spanish",
+    "en": "EN",
+    "es": "ES"
+  },
+  "hero": {
+    "locationBadge": "{city} & the greater Charlotte area",
+    "tagline": "A Clean Home, A Happy Home",
+    "description": "Residential and commercial cleaning — daily, weekly, bi-weekly, monthly, or one time. Reliable, detail-oriented, and easy to book.",
+    "ctaQuote": "Get a Free Quote",
+    "ctaServices": "View Services"
+  },
+  "contactButtons": {
+    "call": "Call",
+    "callSub": "{phone}",
+    "text": "Text",
+    "textSub": "Send a message",
+    "whatsapp": "WhatsApp",
+    "whatsappSub": "Chat with us",
+    "email": "Email",
+    "emailSub": "Send details"
+  },
+  "home": {
+    "whatWeOffer": "What we offer",
+    "seeAllServices": "See all services",
+    "cleaningOnSchedule": "Cleaning on your schedule",
+    "recentWork": "Recent work",
+    "recentWorkDesc": "A look at homes and spaces we've cleaned recently.",
+    "servingHeading": "Proudly serving {area} and nearby towns",
+    "requestFreeQuote": "Request a Free Quote"
+  },
+  "services": {
+    "title": "Our Services",
+    "intro": "Whatever the space, whatever the schedule — we tailor the clean to what you need.",
+    "chooseFrequency": "Choose your frequency",
+    "chooseFrequencyDesc": "Every service can be scheduled the way that works for you.",
+    "getFreeQuote": "Get a Free Quote"
+  },
+  "gallery": {
+    "title": "Recent Work",
+    "description": "A look at homes and spaces we've cleaned recently. New photos are added regularly.",
+    "loading": "Loading photos…",
+    "empty": "Photos coming soon.",
+    "notConfigured": "(Connect Firebase Storage to enable the live gallery.)"
+  },
+  "about": {
+    "title": "About Us",
+    "paragraph1": "{name} is a family-run cleaning company based in {city}, proudly serving homes and businesses across the greater Charlotte, NC area.",
+    "paragraph2": "{tagline} — that's the idea behind everything we do. We treat every home and office like it's our own, with the same attention to detail whether it's a quick weekly refresh or a full deep clean."
+  },
+  "serviceAreas": {
+    "title": "Service Areas",
+    "description": "Based in {city}, we serve homes and businesses throughout the greater Charlotte, NC metro area. Not sure if we cover your area? Reach out — we're happy to check.",
+    "checkYourArea": "Check Your Area"
+  },
+  "contact": {
+    "title": "Get a Free Quote",
+    "description": "Tell us a bit about the space and how often you'd like it cleaned — we'll follow up with a quote. Prefer to talk right away? Use the buttons below."
+  },
+  "contactForm": {
+    "name": "Name",
+    "phone": "Phone",
+    "email": "Email",
+    "address": "Address / area",
+    "service": "Service",
+    "frequency": "Frequency",
+    "message": "Tell us what you need",
+    "messageHint": "Minimum {min} characters.",
+    "selectPrefix": "Select",
+    "submit": "Send Request",
+    "submitting": "Sending…",
+    "errorEmailRequired": "Email is required.",
+    "errorMessageTooShort": "Please tell us a bit more — at least {min} characters.",
+    "errorMessageTooLong": "Please keep your message under {max} characters.",
+    "errorGeneric": "Something went wrong. Please try again.",
+    "successTitle": "Thanks — message sent!",
+    "successBody": "We'll get back to you shortly. For anything urgent, feel free to call or text too.",
+    "previewTitle": "This is a preview site",
+    "previewBody": "The quote form isn't connected here yet. Please call or text us and we'll get back to you right away:"
+  },
+  "footer": {
+    "site": "Site",
+    "serving": "Serving",
+    "allRightsReserved": "© {year} {name}. All rights reserved."
+  },
+  "serviceTypes": {
+    "residential": { "name": "Residential Cleaning", "description": "Homes, apartments, and condos — kept spotless on your schedule." },
+    "commercial": { "name": "Commercial Cleaning", "description": "Offices and small businesses that need a reliably clean space." },
+    "deep": { "name": "Deep Cleaning", "description": "A top-to-bottom detailed clean for move-ins, move-outs, or a fresh start." },
+    "partial": { "name": "Partial Cleaning", "description": "Focused cleaning for the specific rooms or areas that need it most." }
+  },
+  "frequencies": {
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "biWeekly": "Bi-Weekly",
+    "monthly": "Monthly",
+    "oneTime": "One Time"
+  }
+}

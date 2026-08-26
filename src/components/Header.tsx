@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useState, type SVGProps } from "react";
 import { usePathname } from "next/navigation";
 import FacebookIcon from "@/components/FacebookIcon";
+import LanguageSwitch from "@/components/LanguageSwitch";
+import { useLanguage } from "@/lib/i18n";
 import {
   BUSINESS_NAME,
   BUSINESS_PHONE_DISPLAY,
@@ -15,6 +17,7 @@ import {
 export default function Header() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   return (
     <header className="sticky top-0 z-50 border-b border-brand-100 bg-white/95 backdrop-blur">
@@ -39,7 +42,7 @@ export default function Header() {
                   active ? "text-brand-800" : "text-foreground/70"
                 }`}
               >
-                {link.label}
+                {t(`nav.${link.key}`)}
                 <span
                   className={`absolute -bottom-1 left-0 h-0.5 rounded-full bg-accent-500 transition-all duration-300 ${
                     active ? "w-full" : "w-0 group-hover:w-full"
@@ -51,11 +54,12 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-4 md:flex">
+          <LanguageSwitch compact />
           <a
             href={BUSINESS_FACEBOOK}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Sisters Cleaning Service on Facebook"
+            aria-label={t("header.facebookLabel")}
             className="text-brand-800 transition-colors duration-200 hover:text-accent-600"
           >
             <FacebookIcon className="h-5 w-5" />
@@ -70,19 +74,22 @@ export default function Header() {
             href="/contact"
             className="rounded-full bg-accent-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent-600 hover:shadow-md"
           >
-            Get a Free Quote
+            {t("header.getFreeQuote")}
           </Link>
         </div>
 
-        <button
-          type="button"
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          onClick={() => setOpen(v => !v)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg border border-brand-100 text-brand-800 transition-colors duration-150 hover:bg-brand-50 md:hidden"
-        >
-          <MenuIcon open={open} className="h-5 w-5" />
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <LanguageSwitch compact />
+          <button
+            type="button"
+            aria-label={t("header.toggleMenu")}
+            aria-expanded={open}
+            onClick={() => setOpen(v => !v)}
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-brand-100 text-brand-800 transition-colors duration-150 hover:bg-brand-50"
+          >
+            <MenuIcon open={open} className="h-5 w-5" />
+          </button>
+        </div>
       </div>
 
       {open && (
@@ -99,7 +106,7 @@ export default function Header() {
                     : "text-foreground/70 hover:bg-brand-50 hover:text-brand-800"
                 }`}
               >
-                {link.label}
+                {t(`nav.${link.key}`)}
               </Link>
             ))}
           </nav>
@@ -108,7 +115,7 @@ export default function Header() {
               href={BUSINESS_PHONE_TEL}
               className="rounded-lg border border-brand-100 px-3 py-2.5 text-center text-sm font-semibold text-brand-800 transition-colors duration-150 hover:border-brand-500 hover:bg-brand-50"
             >
-              Call {BUSINESS_PHONE_DISPLAY}
+              {t("header.callLabel", { phone: BUSINESS_PHONE_DISPLAY })}
             </a>
             <a
               href={BUSINESS_FACEBOOK}
@@ -124,7 +131,7 @@ export default function Header() {
               onClick={() => setOpen(false)}
               className="rounded-lg bg-accent-500 px-3 py-2.5 text-center text-sm font-semibold text-white transition-colors duration-150 hover:bg-accent-600"
             >
-              Get a Free Quote
+              {t("header.getFreeQuote")}
             </Link>
           </div>
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { useLanguage } from "@/lib/i18n";
 import {
   SERVICE_TYPES,
   FREQUENCIES,
@@ -18,6 +19,7 @@ const IS_STATIC_PREVIEW = process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
 type Status = "idle" | "submitting" | "success" | "error" | "preview";
 
 export default function ContactForm() {
+  const { t } = useLanguage();
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [message, setMessage] = useState("");
@@ -37,19 +39,19 @@ export default function ContactForm() {
     const email = String(payload.email ?? "").trim();
     if (!email) {
       setStatus("error");
-      setErrorMessage("Email is required.");
+      setErrorMessage(t("contactForm.errorEmailRequired"));
       return;
     }
 
     if (messageLength < MESSAGE_MIN_LENGTH) {
       setStatus("error");
-      setErrorMessage(`Please tell us a bit more — at least ${MESSAGE_MIN_LENGTH} characters.`);
+      setErrorMessage(t("contactForm.errorMessageTooShort", { min: MESSAGE_MIN_LENGTH }));
       return;
     }
 
     if (messageLength > MESSAGE_MAX_LENGTH) {
       setStatus("error");
-      setErrorMessage(`Please keep your message under ${MESSAGE_MAX_LENGTH} characters.`);
+      setErrorMessage(t("contactForm.errorMessageTooLong", { max: MESSAGE_MAX_LENGTH }));
       return;
     }
 
@@ -69,7 +71,7 @@ export default function ContactForm() {
 
       if (!res.ok) {
         const body = await res.json().catch(() => null);
-        throw new Error(body?.error ?? "Something went wrong. Please try again.");
+        throw new Error(body?.error ?? t("contactForm.errorGeneric"));
       }
 
       setStatus("success");
@@ -77,17 +79,15 @@ export default function ContactForm() {
       form.reset();
     } catch (err) {
       setStatus("error");
-      setErrorMessage(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setErrorMessage(err instanceof Error ? err.message : t("contactForm.errorGeneric"));
     }
   }
 
   if (status === "success") {
     return (
       <div className="rounded-2xl bg-brand-50 p-8 text-center">
-        <h3 className="text-lg font-bold text-brand-950">Thanks — message sent!</h3>
-        <p className="mt-2 text-sm text-foreground/70">
-          We&apos;ll get back to you shortly. For anything urgent, feel free to call or text too.
-        </p>
+        <h3 className="text-lg font-bold text-brand-950">{t("contactForm.successTitle")}</h3>
+        <p className="mt-2 text-sm text-foreground/70">{t("contactForm.successBody")}</p>
       </div>
     );
   }
@@ -95,13 +95,12 @@ export default function ContactForm() {
   if (status === "preview") {
     return (
       <div className="rounded-2xl bg-brand-50 p-8 text-center">
-        <h3 className="text-lg font-bold text-brand-950">This is a preview site</h3>
+        <h3 className="text-lg font-bold text-brand-950">{t("contactForm.previewTitle")}</h3>
         <p className="mt-2 text-sm text-foreground/70">
-          The quote form isn&apos;t connected here yet. Please call or text{" "}
+          {t("contactForm.previewBody")}{" "}
           <a href={BUSINESS_PHONE_TEL} className="font-semibold text-brand-800 underline">
             {BUSINESS_PHONE_DISPLAY}
-          </a>{" "}
-          and we&apos;ll get back to you right away.
+          </a>
         </p>
       </div>
     );
@@ -116,24 +115,34 @@ export default function ContactForm() {
       </label>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Name" name="name" required autoComplete="name" />
-        <Field label="Phone" name="phone" type="tel" required autoComplete="tel" />
+        <Field label={t("contactForm.name")} name="name" required autoComplete="name" />
+        <Field label={t("contactForm.phone")} name="phone" type="tel" required autoComplete="tel" />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field label="Email" name="email" type="email" required autoComplete="email" />
-        <Field label="Address / area" name="address" autoComplete="address-level2" />
+        <Field label={t("contactForm.email")} name="email" type="email" required autoComplete="email" />
+        <Field label={t("contactForm.address")} name="address" autoComplete="address-level2" />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <SelectField label="Service" name="serviceType" options={SERVICE_TYPES.map(s => s.name)} />
-        <SelectField label="Frequency" name="frequency" options={FREQUENCIES} />
+        <SelectField
+          label={t("contactForm.service")}
+          selectLabel={t("contactForm.selectPrefix")}
+          name="serviceType"
+          options={SERVICE_TYPES.map(s => ({ value: s.name, label: t(`serviceTypes.${s.key}.name`) }))}
+        />
+        <SelectField
+          label={t("contactForm.frequency")}
+          selectLabel={t("contactForm.selectPrefix")}
+          name="frequency"
+          options={FREQUENCIES.map(f => ({ value: f.label, label: t(`frequencies.${f.key}`) }))}
+        />
       </div>
 
       <div>
         <div className="mb-1 flex items-baseline justify-between">
           <label className="block text-sm font-medium text-brand-900" htmlFor="message">
-            Tell us what you need
+            {t("contactForm.message")}
           </label>
           <span
             className={`text-xs ${
@@ -155,7 +164,7 @@ export default function ContactForm() {
           className="w-full rounded-xl border border-brand-100 px-4 py-2.5 text-sm outline-none transition-colors duration-150 hover:border-brand-300 focus:border-brand-500"
         />
         <p id="message-hint" className="mt-1 text-xs text-foreground/50">
-          Minimum {MESSAGE_MIN_LENGTH} characters.
+          {t("contactForm.messageHint", { min: MESSAGE_MIN_LENGTH })}
         </p>
       </div>
 
@@ -168,7 +177,7 @@ export default function ContactForm() {
         disabled={status === "submitting"}
         className="rounded-full bg-accent-500 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent-600 hover:shadow-md disabled:pointer-events-none disabled:translate-y-0 disabled:opacity-60 disabled:shadow-sm"
       >
-        {status === "submitting" ? "Sending…" : "Send Request"}
+        {status === "submitting" ? t("contactForm.submitting") : t("contactForm.submit")}
       </button>
     </form>
   );
@@ -204,7 +213,17 @@ function Field({
   );
 }
 
-function SelectField({ label, name, options }: { label: string; name: string; options: readonly string[] }) {
+function SelectField({
+  label,
+  selectLabel,
+  name,
+  options,
+}: {
+  label: string;
+  selectLabel: string;
+  name: string;
+  options: { value: string; label: string }[];
+}) {
   return (
     <div>
       <label className="mb-1 block text-sm font-medium text-brand-900" htmlFor={name}>
@@ -217,11 +236,11 @@ function SelectField({ label, name, options }: { label: string; name: string; op
         className="w-full cursor-pointer rounded-xl border border-brand-100 bg-white px-4 py-2.5 text-sm outline-none transition-colors duration-150 hover:border-brand-300 focus:border-brand-500"
       >
         <option value="" disabled>
-          Select {label.toLowerCase()}
+          {selectLabel} {label.toLowerCase()}
         </option>
         {options.map(opt => (
-          <option key={opt} value={opt}>
-            {opt}
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
           </option>
         ))}
       </select>

@@ -18,9 +18,16 @@ describe("ContactForm in static-export preview mode", () => {
   });
 
   it("shows a call-to-call message instead of submitting, since /api/contact doesn't exist on the static export", async () => {
+    // Both re-imported together, post-reset, so ContactForm's useLanguage()
+    // resolves against the same LanguageContext instance as this Provider.
     const { default: ContactForm } = await import("./ContactForm");
+    const { LanguageProvider } = await import("@/lib/i18n");
     const user = userEvent.setup();
-    render(<ContactForm />);
+    render(
+      <LanguageProvider>
+        <ContactForm />
+      </LanguageProvider>
+    );
 
     await user.type(screen.getByLabelText("Name"), "Jane Doe");
     await user.type(screen.getByLabelText("Phone"), "7045551234");

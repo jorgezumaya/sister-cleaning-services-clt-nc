@@ -1,4 +1,7 @@
+"use client";
+
 import type { SVGProps } from "react";
+import { useLanguage } from "@/lib/i18n";
 import {
   BUSINESS_PHONE_DISPLAY,
   BUSINESS_PHONE_TEL,
@@ -8,28 +11,30 @@ import {
 
 const CONTACT_TO_EMAIL = "info@sisterscleaningservicenc.com";
 
-const actions = [
-  { label: "Call", sub: BUSINESS_PHONE_DISPLAY, href: BUSINESS_PHONE_TEL, icon: PhoneIcon },
-  { label: "Text", sub: "Send a message", href: BUSINESS_PHONE_SMS, icon: TextIcon },
-  { label: "WhatsApp", sub: "Chat with us", href: BUSINESS_WHATSAPP, icon: WhatsAppIcon },
-  { label: "Email", sub: "Send details", href: `mailto:${CONTACT_TO_EMAIL}`, icon: MailIcon },
-];
-
 /**
  * tel: / sms: / wa.me / mailto: links each resolve to the right native app
  * per device (phone dialer or Messages on mobile, WhatsApp Web or the
  * default mail client on desktop) without any user-agent sniffing.
  */
 export default function ContactButtons({ compact = false }: { compact?: boolean }) {
+  const { t } = useLanguage();
+
+  const actions = [
+    { key: "call", label: t("contactButtons.call"), sub: BUSINESS_PHONE_DISPLAY, href: BUSINESS_PHONE_TEL, icon: PhoneIcon },
+    { key: "text", label: t("contactButtons.text"), sub: t("contactButtons.textSub"), href: BUSINESS_PHONE_SMS, icon: TextIcon },
+    { key: "whatsapp", label: t("contactButtons.whatsapp"), sub: t("contactButtons.whatsappSub"), href: BUSINESS_WHATSAPP, icon: WhatsAppIcon },
+    { key: "email", label: t("contactButtons.email"), sub: t("contactButtons.emailSub"), href: `mailto:${CONTACT_TO_EMAIL}`, icon: MailIcon },
+  ];
+
   return (
     <div
       className={`grid gap-3 ${
         compact ? "grid-cols-2 sm:grid-cols-4" : "grid-cols-2 sm:grid-cols-4"
       }`}
     >
-      {actions.map(({ label, sub, href, icon: Icon }) => (
+      {actions.map(({ key, label, sub, href, icon: Icon }) => (
         <a
-          key={label}
+          key={key}
           href={href}
           className="flex flex-col items-center gap-1.5 rounded-xl border border-brand-100 bg-white px-3 py-4 text-center shadow-sm transition hover:-translate-y-0.5 hover:border-brand-500 hover:shadow-md"
         >

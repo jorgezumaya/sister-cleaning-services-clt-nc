@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
+import { renderWithLang } from "@/test/renderWithLang";
 import userEvent from "@testing-library/user-event";
 import ContactForm from "./ContactForm";
 import { MESSAGE_MAX_LENGTH, MESSAGE_MIN_LENGTH } from "@/lib/constants";
@@ -31,13 +32,13 @@ describe("ContactForm", () => {
   });
 
   it("marks email as a required field", () => {
-    render(<ContactForm />);
+    renderWithLang(<ContactForm />);
     expect(screen.getByLabelText("Email")).toBeRequired();
   });
 
   it("shows a live character counter for the message field", async () => {
     const user = userEvent.setup();
-    render(<ContactForm />);
+    renderWithLang(<ContactForm />);
 
     expect(screen.getByText(`0 / ${MESSAGE_MAX_LENGTH}`)).toBeInTheDocument();
 
@@ -47,7 +48,7 @@ describe("ContactForm", () => {
 
   it("blocks submission and shows an error when the message is under the minimum length", async () => {
     const user = userEvent.setup();
-    render(<ContactForm />);
+    renderWithLang(<ContactForm />);
 
     await fillRequiredFields(user, "too short");
     await user.click(screen.getByRole("button", { name: /send request/i }));
@@ -59,7 +60,7 @@ describe("ContactForm", () => {
   });
 
   it("caps the message textarea at the max length so it can never exceed the limit", () => {
-    render(<ContactForm />);
+    renderWithLang(<ContactForm />);
     expect(screen.getByLabelText("Tell us what you need")).toHaveAttribute(
       "maxlength",
       String(MESSAGE_MAX_LENGTH)
@@ -68,7 +69,7 @@ describe("ContactForm", () => {
 
   it("blocks submission and shows an error when email is missing", async () => {
     const user = userEvent.setup();
-    render(<ContactForm />);
+    renderWithLang(<ContactForm />);
 
     await user.type(screen.getByLabelText("Name"), "Jane Doe");
     await user.type(screen.getByLabelText("Phone"), "7045551234");
@@ -81,7 +82,7 @@ describe("ContactForm", () => {
 
   it("submits successfully once all requirements are met", async () => {
     const user = userEvent.setup();
-    render(<ContactForm />);
+    renderWithLang(<ContactForm />);
 
     await fillRequiredFields(user);
     await user.click(screen.getByRole("button", { name: /send request/i }));
