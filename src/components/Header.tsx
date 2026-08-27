@@ -5,6 +5,7 @@ import { useState, type SVGProps } from "react";
 import { usePathname } from "next/navigation";
 import FacebookIcon from "@/components/FacebookIcon";
 import LanguageSwitch from "@/components/LanguageSwitch";
+import MessageButton from "@/components/MessageButton";
 import { useLanguage } from "@/lib/i18n";
 import {
   BUSINESS_NAME,
@@ -66,10 +67,15 @@ export default function Header() {
           </a>
           <a
             href={BUSINESS_PHONE_TEL}
-            className="text-sm font-semibold text-brand-800 transition-colors duration-200 hover:text-accent-600"
+            aria-label={t("header.callLabel", { phone: BUSINESS_PHONE_DISPLAY })}
+            className="text-brand-800 transition-colors duration-200 hover:text-accent-600"
           >
-            {BUSINESS_PHONE_DISPLAY}
+            <PhoneIcon className="h-5 w-5" />
           </a>
+          <MessageButton
+            menuAlign="right"
+            className="text-brand-800 transition-colors duration-200 hover:text-accent-600"
+          />
           <Link
             href="/contact"
             className="rounded-full bg-accent-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-accent-600 hover:shadow-md"
@@ -113,10 +119,17 @@ export default function Header() {
           <div className="mt-3 flex flex-col gap-2">
             <a
               href={BUSINESS_PHONE_TEL}
-              className="rounded-lg border border-brand-100 px-3 py-2.5 text-center text-sm font-semibold text-brand-800 transition-colors duration-150 hover:border-brand-500 hover:bg-brand-50"
+              aria-label={t("header.callLabel", { phone: BUSINESS_PHONE_DISPLAY })}
+              className="flex items-center justify-center gap-2 rounded-lg border border-brand-100 px-3 py-2.5 text-center text-sm font-semibold text-brand-800 transition-colors duration-150 hover:border-brand-500 hover:bg-brand-50"
             >
-              {t("header.callLabel", { phone: BUSINESS_PHONE_DISPLAY })}
+              <PhoneIcon className="h-4 w-4" />
+              {t("contactButtons.call")}
             </a>
+            <MessageButton
+              showLabel
+              menuAlign="left"
+              className="flex items-center justify-center gap-2 rounded-lg border border-brand-100 px-3 py-2.5 text-center text-sm font-semibold text-brand-800 transition-colors duration-150 hover:border-brand-500 hover:bg-brand-50"
+            />
             <a
               href={BUSINESS_FACEBOOK}
               target="_blank"
@@ -137,6 +150,14 @@ export default function Header() {
         </div>
       )}
     </header>
+  );
+}
+
+function PhoneIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} {...props}>
+      <path d="M4 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L14 13l5 2v4a2 2 0 0 1-2 2C9.5 21 3 14.5 3 6a2 2 0 0 1 2-2Z" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
