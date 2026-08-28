@@ -1,0 +1,9 @@
+{
+  // Temporary "coming soon" page. Assets-only Worker with the SAME name as the
+  // real site, so deploying it replaces what the domain serves without
+  // touching the Next.js app. Deploy with:  npm run deploy:holding
+  // Restore the full site with:            npm run deploy
+  "name": "sister-cleaning-services-clt-nc",
+  "compatibility_date": "2026-08-26",
+  "assets": { "directory": "./public" }
+}
