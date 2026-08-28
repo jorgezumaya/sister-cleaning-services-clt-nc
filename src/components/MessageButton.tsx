@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type SVGProps } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type SVGProps } from "react";
 import { useLanguage } from "@/lib/i18n";
 import { BUSINESS_PHONE_SMS, BUSINESS_WHATSAPP } from "@/lib/constants";
 
@@ -8,10 +8,20 @@ import { BUSINESS_PHONE_SMS, BUSINESS_WHATSAPP } from "@/lib/constants";
  * iOS and macOS Messages handles sms: links natively and well, so Apple
  * platforms go straight there with no extra prompt. Android and Windows have
  * no guaranteed default texting app, so we ask: Text (SMS) or WhatsApp.
+ *
+ * navigator.userAgent isn't available during SSR, and its value can't be
+ * known until the client mounts, so it's read via useSyncExternalStore:
+ * that renders the server snapshot (false) on the client's first pass to
+ * avoid a hydration mismatch, then syncs to the real value right after.
  */
-function isApplePlatform() {
-  if (typeof navigator === "undefined") return false;
+const noopSubscribe = () => () => {};
+
+function getIsApplePlatform() {
   return /iPhone|iPod|iPad|Macintosh/.test(navigator.userAgent);
+}
+
+function getServerIsApplePlatform() {
+  return false;
 }
 
 export default function MessageButton({
@@ -24,13 +34,9 @@ export default function MessageButton({
   menuAlign?: "left" | "right";
 }) {
   const { t } = useLanguage();
-  const [isApple, setIsApple] = useState(false);
+  const isApple = useSyncExternalStore(noopSubscribe, getIsApplePlatform, getServerIsApplePlatform);
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setIsApple(isApplePlatform());
-  }, []);
 
   useEffect(() => {
     if (!open) return;
