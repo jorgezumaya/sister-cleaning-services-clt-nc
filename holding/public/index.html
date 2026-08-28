@@ -5,48 +5,109 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Coming soon</title>
 <meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#05060b">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --sky:#7dc9bd; --sky-deep:#5fb3a6; --ink:#2a1f1c; --skin:#e9a566;
-    --hair:#5a2f17; --navy:#2d3072; --red:#e23a3a; --gold:#f5c542; --purple:#9b46b8; --chute:#f7f1e6;
+    --bg-void:#05060b;
+    --text:#eef1fb; --text-dim:#9098b3;
+    --purple:#9d5cff; --purple-2:#cdb4ff; --purple-glow:rgba(157,92,255,.4);
+    --yellow:#e8ff3d; --yellow-glow:rgba(232,255,61,.4);
+    --cyan:#35e6ff;
+    --border:rgba(151,163,199,.18); --track:#11141f;
+    --skin:#e9a566; --hair:#5a2f17; --navy:#3d3fb0; --red:#ff3b5c; --gold:#ffb238;
+    --chute:#161b2c; --ink:#dbe1f5; --mark:#160f26;
   }
   *{box-sizing:border-box;margin:0}
   html,body{height:100%}
   body{
-    background:var(--sky);color:var(--ink);
-    font-family:"Trebuchet MS","Segoe UI",system-ui,sans-serif;
-    display:grid;place-items:center;overflow:hidden;padding:24px;
+    background:
+      radial-gradient(ellipse 900px 560px at 15% -10%, rgba(157,92,255,.22), transparent 60%),
+      radial-gradient(ellipse 760px 520px at 100% 6%, rgba(53,230,255,.15), transparent 55%),
+      radial-gradient(ellipse 800px 620px at 50% 118%, rgba(232,255,61,.09), transparent 60%),
+      var(--bg-void);
+    color:var(--text);
+    font-family:"Rajdhani",system-ui,-apple-system,sans-serif;
+    display:grid;place-items:center;overflow:hidden;padding:24px;position:relative;
   }
-  main{width:min(560px,100%);text-align:center}
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:linear-gradient(rgba(151,163,199,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(151,163,199,.05) 1px, transparent 1px);
+    background-size:42px 42px;
+    -webkit-mask-image:radial-gradient(ellipse 80% 55% at 50% 30%, black 5%, transparent 72%);
+    mask-image:radial-gradient(ellipse 80% 55% at 50% 30%, black 5%, transparent 72%);
+  }
+  body::after{
+    content:"";position:fixed;z-index:0;pointer-events:none;
+    width:340px;height:340px;left:-90px;bottom:-90px;border-radius:50%;
+    background:radial-gradient(circle, rgba(53,230,255,.16), transparent 70%);
+    filter:blur(6px);animation:motePulse 6s ease-in-out infinite;
+  }
+  main{position:relative;z-index:1;width:min(560px,100%);text-align:center}
   svg.scene{width:100%;height:auto;display:block;overflow:visible}
-  h1{
-    font-size:clamp(2.4rem,8vw,4rem);letter-spacing:-.02em;line-height:1;
-    margin-top:8px;text-shadow:3px 3px 0 var(--sky-deep);
+  .tag{
+    display:inline-flex;align-items:center;gap:.45rem;margin-top:6px;
+    padding:.32rem .85rem .32rem 1.05rem;
+    clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+    background:rgba(157,92,255,.14);border:1px solid rgba(157,92,255,.45);
+    color:var(--purple-2);font-weight:700;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;
   }
-  p{margin-top:12px;font-size:1.05rem;color:#1d3a36}
+  .tag i{width:6px;height:6px;border-radius:50%;background:var(--yellow);box-shadow:0 0 8px var(--yellow-glow);animation:blip 1.4s infinite;flex-shrink:0;}
+  h1{
+    font-family:"Anton",impact,"Arial Narrow",sans-serif;font-weight:400;text-transform:uppercase;
+    font-size:clamp(2.6rem,9vw,4.4rem);letter-spacing:.01em;line-height:.95;
+    margin-top:16px;color:var(--yellow);
+    text-shadow:0 0 30px var(--yellow-glow), 0 4px 0 rgba(0,0,0,.45);
+  }
+  p{margin-top:14px;font-size:1.08rem;color:var(--text-dim);max-width:38ch;margin-inline:auto;line-height:1.5}
   .bar{
-    margin:26px auto 0;width:min(340px,90%);height:22px;border:3px solid var(--ink);
-    border-radius:999px;background:var(--chute);overflow:hidden;
+    margin:30px auto 0;width:min(340px,90%);height:12px;border-radius:999px;
+    border:1px solid var(--border);background:var(--track);overflow:hidden;position:relative;
   }
   .bar i{
-    display:block;height:100%;width:38%;background:var(--gold);
-    border-right:3px solid var(--ink);animation:load 6s ease-in-out infinite alternate;
+    display:block;height:100%;width:38%;border-radius:999px;position:relative;
+    background:linear-gradient(90deg,var(--purple),var(--yellow));
+    box-shadow:0 0 16px var(--purple-glow);
+    animation:load 6s ease-in-out infinite alternate;
   }
-  .label{margin-top:8px;font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;color:#1d3a36}
+  .bar i::after{
+    content:"";position:absolute;inset:0;width:40%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+    animation:sheen 2.4s ease-in-out infinite;
+  }
+  .label{margin-top:10px;display:inline-flex;align-items:center;gap:.45rem;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);font-weight:600}
+  .label i{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px rgba(53,230,255,.6);animation:blip 1.4s infinite;flex-shrink:0;}
   .chute{animation:drift 5s ease-in-out infinite}
   @keyframes drift{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-14px) rotate(1.5deg)}}
   @keyframes load{from{width:22%}to{width:78%}}
-  @media (prefers-reduced-motion:reduce){.chute,.bar i{animation:none}.bar i{width:55%}}
+  @keyframes sheen{0%{transform:translateX(-140%)}100%{transform:translateX(360%)}}
+  @keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+  @keyframes motePulse{0%,100%{opacity:.55}50%{opacity:.9}}
+  @keyframes glowPulse{0%,100%{opacity:.5}50%{opacity:.85}}
+  @media (prefers-reduced-motion:reduce){
+    .chute,.bar i,.bar i::after,.label i,.tag i,body::after,#driftGlow{animation:none}
+    .bar i{width:55%}
+  }
 </style>
 </head>
 <body>
 <main>
   <svg class="scene" viewBox="0 0 560 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two cartoon characters floating down under a parachute">
-    <!-- clouds -->
-    <g fill="#fff" opacity=".85">
-      <ellipse cx="70" cy="330" rx="46" ry="16"/><ellipse cx="100" cy="320" rx="30" ry="18"/>
-      <ellipse cx="480" cy="110" rx="44" ry="15"/><ellipse cx="508" cy="100" rx="26" ry="16"/>
+    <defs>
+      <filter id="haze" x="-60%" y="-60%" width="220%" height="220%">
+        <feGaussianBlur stdDeviation="9"/>
+      </filter>
+    </defs>
+    <!-- ambient glow -->
+    <ellipse id="driftGlow" cx="280" cy="180" rx="230" ry="170" fill="var(--purple)" opacity=".16" filter="url(#haze)" style="animation:glowPulse 6s ease-in-out infinite"/>
+    <!-- neon haze motes -->
+    <g filter="url(#haze)" opacity=".55">
+      <ellipse cx="70" cy="330" rx="46" ry="16" fill="var(--cyan)"/><ellipse cx="100" cy="320" rx="30" ry="18" fill="var(--purple)"/>
+      <ellipse cx="480" cy="110" rx="44" ry="15" fill="var(--purple)"/><ellipse cx="508" cy="100" rx="26" ry="16" fill="var(--cyan)"/>
     </g>
     <g class="chute" style="transform-origin:280px 60px">
       <!-- parachute -->
@@ -67,8 +128,8 @@
         <path d="M4 110 C-4 40 24 14 60 14 C96 14 124 40 116 110 Q104 96 100 78 Q60 90 20 78 Q16 96 4 110 Z" fill="var(--hair)" stroke="var(--ink)" stroke-width="5" stroke-linejoin="round"/>
         <path d="M18 100 Q14 40 60 32 Q106 40 102 100" fill="var(--skin)" stroke="var(--ink)" stroke-width="5"/>
         <path d="M18 60 Q40 34 60 44 Q84 30 102 60 Q80 46 60 50 Q40 46 18 60 Z" fill="var(--hair)" stroke="var(--ink)" stroke-width="4" stroke-linejoin="round"/>
-        <circle cx="44" cy="66" r="4.5" fill="var(--ink)"/><circle cx="76" cy="66" r="4.5" fill="var(--ink)"/>
-        <path d="M46 80 q14 12 28 0" fill="none" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="44" cy="66" r="4.5" fill="var(--mark)"/><circle cx="76" cy="66" r="4.5" fill="var(--mark)"/>
+        <path d="M46 80 q14 12 28 0" fill="none" stroke="var(--mark)" stroke-width="5" stroke-linecap="round"/>
         <!-- headset -->
         <path d="M18 60 Q18 30 60 30 Q102 30 102 60" fill="none" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/>
         <rect x="8" y="52" width="14" height="24" rx="6" fill="var(--purple)" stroke="var(--ink)" stroke-width="4"/>
@@ -80,7 +141,7 @@
         <path d="M102 120 Q120 150 90 165" fill="none" stroke="var(--skin)" stroke-width="7" stroke-linecap="round"/>
         <rect x="30" y="150" width="60" height="30" rx="14" fill="var(--purple)" stroke="var(--ink)" stroke-width="5"/>
         <circle cx="72" cy="160" r="3.5" fill="var(--gold)"/><circle cx="80" cy="166" r="3.5" fill="var(--red)"/>
-        <rect x="40" y="160" width="12" height="4" rx="2" fill="var(--ink)"/><rect x="44" y="156" width="4" height="12" rx="2" fill="var(--ink)"/>
+        <rect x="40" y="160" width="12" height="4" rx="2" fill="var(--mark)"/><rect x="44" y="156" width="4" height="12" rx="2" fill="var(--mark)"/>
         <!-- legs -->
         <path d="M44 188 L40 225 M76 188 L80 225" stroke="var(--ink)" stroke-width="12" stroke-linecap="round"/>
         <path d="M44 188 L40 225 M76 188 L80 225" stroke="var(--skin)" stroke-width="7" stroke-linecap="round"/>
@@ -97,7 +158,7 @@
         <path d="M18 60 Q40 34 60 44 Q84 30 102 60 Q80 46 60 50 Q40 46 18 60 Z" fill="var(--hair)" stroke="var(--ink)" stroke-width="4" stroke-linejoin="round"/>
         <!-- visor -->
         <path d="M20 58 H100 L96 76 H24 Z" fill="var(--gold)" stroke="var(--ink)" stroke-width="5" stroke-linejoin="round" opacity=".95"/>
-        <path d="M46 84 q14 10 28 0" fill="none" stroke="var(--ink)" stroke-width="5" stroke-linecap="round"/>
+        <path d="M46 84 q14 10 28 0" fill="none" stroke="var(--mark)" stroke-width="5" stroke-linecap="round"/>
         <!-- arms -->
         <path d="M18 120 Q-6 140 20 170" fill="none" stroke="var(--ink)" stroke-width="12" stroke-linecap="round"/>
         <path d="M18 120 Q-6 140 20 170" fill="none" stroke="var(--skin)" stroke-width="7" stroke-linecap="round"/>
@@ -115,10 +176,11 @@
     </g>
   </svg>
 
+  <span class="tag"><i></i>Status update</span>
   <h1>Coming soon</h1>
   <p>We're dropping in a little later than planned.</p>
   <div class="bar" aria-hidden="true"><i></i></div>
-  <div class="label">Loading the lobby</div>
+  <div class="label"><i></i>Loading the lobby</div>
 </main>
 </body>
 </html>
